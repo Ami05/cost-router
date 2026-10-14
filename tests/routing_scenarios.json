@@ -1,0 +1,109 @@
+{
+  "_doc": "Planted-failure scenarios for routing validation. N=3 runs each.",
+  "scenarios": [
+    {
+      "id": "S1-no-model",
+      "description": "Task dispatch without explicit model should be denied",
+      "input": {
+        "tool_name": "Task",
+        "tool_input": {"prompt": "Do something without specifying model"}
+      },
+      "expected": {
+        "decision": "deny",
+        "message_contains": "explicit model required"
+      }
+    },
+    {
+      "id": "S2-fo-edit",
+      "description": "FO role calling Edit should be denied",
+      "input": {
+        "tool_name": "Edit",
+        "text": "Routing: FO — dispatching workers",
+        "tool_input": {}
+      },
+      "expected": {
+        "decision": "deny",
+        "message_contains": "direct mutations are blocked"
+      }
+    },
+    {
+      "id": "S3-direct-edit",
+      "description": "DIRECT role calling Edit should be allowed",
+      "input": {
+        "tool_name": "Edit",
+        "text": "Routing: DIRECT — inline work",
+        "tool_input": {}
+      },
+      "expected": {
+        "decision": "allow"
+      }
+    },
+    {
+      "id": "S4-task-with-model",
+      "description": "Task dispatch with explicit model should be allowed",
+      "input": {
+        "tool_name": "Task",
+        "tool_input": {"model": "haiku", "prompt": "Explore codebase"}
+      },
+      "expected": {
+        "decision": "allow"
+      }
+    },
+    {
+      "id": "C1-agentic-scaffold",
+      "description": "Scaffold phrasing that keyword misses — should classify as agentic_action",
+      "prompt": "scaffold the json for each ticket now",
+      "expected_intent": "agentic_action",
+      "expected_source": "claude",
+      "tags": ["canonical", "claude_classifier"]
+    },
+    {
+      "id": "C2-agentic-materialize",
+      "description": "Materialize phrasing — should classify as agentic_action",
+      "prompt": "materialize the backlog",
+      "expected_intent": "agentic_action",
+      "expected_source": "claude",
+      "tags": ["canonical", "claude_classifier"]
+    },
+    {
+      "id": "C3-agentic-persist",
+      "description": "Persist to disk phrasing — should classify as agentic_action",
+      "prompt": "take all those tickets and put them in json",
+      "expected_intent": "agentic_action",
+      "expected_source": "claude",
+      "tags": ["canonical", "claude_classifier"]
+    },
+    {
+      "id": "C4-architecture-end-to-end",
+      "description": "End-to-end architecture question that keyword misses",
+      "prompt": "what does the whole pipeline look like end to end?",
+      "expected_intent": "qa_architecture",
+      "expected_source": "claude",
+      "tags": ["canonical", "claude_classifier"]
+    },
+    {
+      "id": "C5-reads-locate-file",
+      "description": "File location request that keyword misses",
+      "prompt": "point me to the file that handles intent routing",
+      "expected_intent": "qa_with_reads",
+      "expected_source": "claude",
+      "tags": ["canonical", "claude_classifier"]
+    },
+    {
+      "id": "C6-content-gen-notes",
+      "description": "Content generation phrasing that keyword misses",
+      "prompt": "jot these notes down into a markdown file",
+      "expected_intent": "content_generation",
+      "expected_source": "claude",
+      "tags": ["canonical", "claude_classifier"]
+    },
+    {
+      "id": "C7-dispatch-worker",
+      "description": "Dispatch intent phrasing that keyword misses",
+      "prompt": "sending this over to a worker to handle",
+      "expected_intent": "dispatch_justification",
+      "expected_source": "claude",
+      "tags": ["canonical", "claude_classifier"]
+    }
+  ]
+}

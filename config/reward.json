@@ -1,0 +1,51 @@
+{
+  "reward": {
+    "override_penalty": 0.5,
+    "escalation_penalty_cap": 0.8,
+    "escalation_penalty_multiplier": 0.2,
+    "error_penalty_cap": 0.3,
+    "error_penalty_multiplier": 0.1,
+    "revert_penalty_cap": 0.2,
+    "revert_penalty_multiplier": 0.1,
+    "clean_completion_bonus": 0.2,
+    "cost_penalty_cap": 0.5,
+    "cost_penalty_divisor_usd": 1.0,
+    "over_route_penalty_cap": 0.2,
+    "over_route_penalty_multiplier": 0.05
+  },
+  "feedback_loop": {
+    "promote_monitor_window": 20,
+    "regression_threshold": 0.2,
+    "improvement_threshold": 0.05,
+    "max_rules_per_week": 3,
+    "confidence_window": 50,
+    "confidence_threshold_low": 0.65,
+    "confidence_min_n_low": 3,
+    "confidence_threshold_medium": 0.8,
+    "confidence_min_n_medium": 5
+  },
+  "pipeline_trigger": {
+    "min_shadow_routes": 10,
+    "cooldown_min_new_routes": 5,
+    "gc_apply": false
+  },
+  "quality_signal": {
+    "window": 30
+  },
+  "policy": {
+    "queued_threshold": 2,
+    "auto_apply_threshold": 10,
+    "max_table_rows": 80,
+    "dead_row_window": 50
+  },
+  "policy_gc": {
+    "near_duplicate_ratio": 0.7
+  },
+  "tune_savings": {
+    "rule_inject_fallback_usd": 0.02,
+    "rule_inject_evidence_multiplier": 0.05,
+    "explore_avg_tokens": 3000,
+    "_explore_sonnet_waste_usd_deprecated": "MVP-1: replaced by _model_utils.explore_sonnet_waste_usd(), which derives this live from pricing.json's sonnet output price * explore_avg_tokens above, instead of a hardcoded dollar figure that can go stale when pricing changes. Kept here as a comment, not read by any script.",
+    "session_summary_proposal_multiplier": 0.05
+  }
+}

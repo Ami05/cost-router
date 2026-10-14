@@ -1,0 +1,256 @@
+{
+  "meta": {
+    "version": "1.0",
+    "description": "Dispatch strategy eval scenarios across 6 complexity tiers",
+    "tiers": [
+      "simple_rename",
+      "similar_blocks",
+      "extract_function",
+      "multi_file_imports",
+      "create_and_wire",
+      "ambiguous_edit"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "SR-01",
+      "name": "Rename variable in single function",
+      "complexity": "simple_rename",
+      "description": "Rename 'result' to 'output' in process_data()",
+      "tags": ["single_edit"],
+      "fixture_dir": "simple_rename"
+    },
+    {
+      "id": "SR-02",
+      "name": "Rename function across file",
+      "complexity": "simple_rename",
+      "description": "Rename calc_total() to compute_total() including all call sites within the same file",
+      "tags": ["single_edit", "multi_occurrence"],
+      "fixture_dir": "simple_rename"
+    },
+    {
+      "id": "SR-03",
+      "name": "Rename constant",
+      "complexity": "simple_rename",
+      "description": "Rename MAX_RETRIES to RETRY_LIMIT in config module",
+      "tags": ["single_edit"],
+      "fixture_dir": "simple_rename"
+    },
+    {
+      "id": "SR-04",
+      "name": "Rename class attribute",
+      "complexity": "simple_rename",
+      "description": "Rename self.data to self.payload in Router class",
+      "tags": ["single_edit", "multi_occurrence"],
+      "fixture_dir": "simple_rename"
+    },
+    {
+      "id": "SR-05",
+      "name": "Rename parameter with default",
+      "complexity": "simple_rename",
+      "description": "Rename timeout_ms to timeout_millis in send_request()",
+      "tags": ["single_edit"],
+      "fixture_dir": "simple_rename"
+    },
+    {
+      "id": "SB-01",
+      "name": "Edit one of three similar handlers",
+      "complexity": "similar_blocks",
+      "description": "Add logging to handle_create() but NOT handle_update() or handle_delete()",
+      "tags": ["similar_blocks", "precision_required"],
+      "fixture_dir": "similar_blocks"
+    },
+    {
+      "id": "SB-02",
+      "name": "Modify second of four test methods",
+      "complexity": "similar_blocks",
+      "description": "Add assertion to test_process_valid_b() — four test methods have near-identical setup",
+      "tags": ["similar_blocks", "precision_required"],
+      "fixture_dir": "similar_blocks"
+    },
+    {
+      "id": "SB-03",
+      "name": "Change one switch case among many",
+      "complexity": "similar_blocks",
+      "description": "Update the 'pending' case in status_handler() — 5 cases with same structure",
+      "tags": ["similar_blocks"],
+      "fixture_dir": "similar_blocks"
+    },
+    {
+      "id": "SB-04",
+      "name": "Edit specific route handler",
+      "complexity": "similar_blocks",
+      "description": "Add rate limiting to POST /api/users but not GET /api/users or POST /api/items",
+      "tags": ["similar_blocks", "precision_required"],
+      "fixture_dir": "similar_blocks"
+    },
+    {
+      "id": "SB-05",
+      "name": "Modify one config block among duplicates",
+      "complexity": "similar_blocks",
+      "description": "Change retry count in production config block — dev/staging/prod blocks are nearly identical",
+      "tags": ["similar_blocks"],
+      "fixture_dir": "similar_blocks"
+    },
+    {
+      "id": "EF-01",
+      "name": "Extract validation logic to helper",
+      "complexity": "extract_function",
+      "description": "Extract email validation from register_user() into validate_email() in same file",
+      "tags": ["refactor", "single_file"],
+      "fixture_dir": "extract_function"
+    },
+    {
+      "id": "EF-02",
+      "name": "Extract retry logic to decorator",
+      "complexity": "extract_function",
+      "description": "Extract retry loop from fetch_data() into @with_retry decorator",
+      "tags": ["refactor", "single_file"],
+      "fixture_dir": "extract_function"
+    },
+    {
+      "id": "EF-03",
+      "name": "Extract config parsing",
+      "complexity": "extract_function",
+      "description": "Pull config dict construction out of main() into load_config()",
+      "tags": ["refactor", "single_file"],
+      "fixture_dir": "extract_function"
+    },
+    {
+      "id": "EF-04",
+      "name": "Extract error formatting",
+      "complexity": "extract_function",
+      "description": "Extract error message formatting from 3 handlers into format_error()",
+      "tags": ["refactor", "multi_occurrence"],
+      "fixture_dir": "extract_function"
+    },
+    {
+      "id": "EF-05",
+      "name": "Extract database query builder",
+      "complexity": "extract_function",
+      "description": "Extract SQL query construction from get_users() and get_orders() into build_query()",
+      "tags": ["refactor", "multi_occurrence"],
+      "fixture_dir": "extract_function"
+    },
+    {
+      "id": "MF-01",
+      "name": "Move utility to shared module + update 3 imports",
+      "complexity": "multi_file_imports",
+      "description": "Move format_date() from views.py to utils.py, update imports in views.py, reports.py, api.py",
+      "tags": ["multi_file", "imports"],
+      "fixture_dir": "multi_file_imports"
+    },
+    {
+      "id": "MF-02",
+      "name": "Rename module + update all importers",
+      "complexity": "multi_file_imports",
+      "description": "Rename helpers.py to utils.py, update 4 files that import from it",
+      "tags": ["multi_file", "imports", "rename"],
+      "fixture_dir": "multi_file_imports"
+    },
+    {
+      "id": "MF-03",
+      "name": "Split wildcard import into named imports",
+      "complexity": "multi_file_imports",
+      "description": "Replace 'from utils import *' with explicit imports in 3 consumer files",
+      "tags": ["multi_file", "imports"],
+      "fixture_dir": "multi_file_imports"
+    },
+    {
+      "id": "MF-04",
+      "name": "Add new dependency + update consumers",
+      "complexity": "multi_file_imports",
+      "description": "Add caching import and decorator to 3 service functions across 2 files",
+      "tags": ["multi_file", "imports"],
+      "fixture_dir": "multi_file_imports"
+    },
+    {
+      "id": "MF-05",
+      "name": "Consolidate duplicate imports",
+      "complexity": "multi_file_imports",
+      "description": "3 files each define their own parse_json() — consolidate into shared.py and update imports",
+      "tags": ["multi_file", "imports", "dedup"],
+      "fixture_dir": "multi_file_imports"
+    },
+    {
+      "id": "CW-01",
+      "name": "Create utils.py + wire into existing module",
+      "complexity": "create_and_wire",
+      "description": "Create new utils.py with 3 functions extracted from main.py, update main.py imports",
+      "tags": ["create", "multi_file", "refactor"],
+      "fixture_dir": "create_and_wire"
+    },
+    {
+      "id": "CW-02",
+      "name": "Create test file for existing module",
+      "complexity": "create_and_wire",
+      "description": "Create test_router.py with 4 test cases covering Router class methods",
+      "tags": ["create", "test_generation"],
+      "fixture_dir": "create_and_wire"
+    },
+    {
+      "id": "CW-03",
+      "name": "Create config + integrate into app",
+      "complexity": "create_and_wire",
+      "description": "Create config.py with Settings class, update app.py and db.py to use it",
+      "tags": ["create", "multi_file"],
+      "fixture_dir": "create_and_wire"
+    },
+    {
+      "id": "CW-04",
+      "name": "Create middleware + register in app",
+      "complexity": "create_and_wire",
+      "description": "Create auth_middleware.py, register in app.py, update 2 route handlers",
+      "tags": ["create", "multi_file"],
+      "fixture_dir": "create_and_wire"
+    },
+    {
+      "id": "CW-05",
+      "name": "Create migration + update model",
+      "complexity": "create_and_wire",
+      "description": "Create migration file adding 'status' column, update model.py with new field",
+      "tags": ["create", "multi_file"],
+      "fixture_dir": "create_and_wire"
+    },
+    {
+      "id": "AE-01",
+      "name": "Clean up error handling (vague)",
+      "complexity": "ambiguous_edit",
+      "description": "Clean up the error handling in process_request() — no specific instructions",
+      "tags": ["ambiguous", "judgment_required"],
+      "fixture_dir": "ambiguous_edit"
+    },
+    {
+      "id": "AE-02",
+      "name": "Make the code more Pythonic",
+      "complexity": "ambiguous_edit",
+      "description": "Refactor data_transform() to be more Pythonic — multiple valid interpretations",
+      "tags": ["ambiguous", "judgment_required"],
+      "fixture_dir": "ambiguous_edit"
+    },
+    {
+      "id": "AE-03",
+      "name": "Improve performance of loop",
+      "complexity": "ambiguous_edit",
+      "description": "Optimize the main processing loop in analyze() — could mean many things",
+      "tags": ["ambiguous", "judgment_required"],
+      "fixture_dir": "ambiguous_edit"
+    },
+    {
+      "id": "AE-04",
+      "name": "Fix the bug in authentication",
+      "complexity": "ambiguous_edit",
+      "description": "There's a bug in the auth flow — no stack trace, no specific function named",
+      "tags": ["ambiguous", "judgment_required"],
+      "fixture_dir": "ambiguous_edit"
+    },
+    {
+      "id": "AE-05",
+      "name": "Add proper logging",
+      "complexity": "ambiguous_edit",
+      "description": "Add logging to the service module — where, what level, what format unspecified",
+      "tags": ["ambiguous", "judgment_required"],
+      "fixture_dir": "ambiguous_edit"
+    }
+  ]
+}

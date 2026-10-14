@@ -1,0 +1,1433 @@
+{
+  "_doc": "Labeled exemplar set for semantic intent classification. Each entry is a reference vector for embedding-similarity scoring. Minimum 15 per intent class.",
+  "_schema": {
+    "text": "The prompt text",
+    "intent_class": "qa_simple | qa_with_reads | qa_architecture | agentic_action | content_generation | dispatch_justification | inline_narration",
+    "source": "eval | reward_log | manual",
+    "difficulty": "canonical | paraphrase | adversarial",
+    "work_complexity": "mechanical | reasoning | ambiguous"
+  },
+  "exemplars": [
+    {
+      "text": "Is the fail-open behavior intentional?",
+      "intent_class": "qa_simple",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Does this project use pytest?",
+      "intent_class": "qa_simple",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "What does the dispatch_context_gate do?",
+      "intent_class": "qa_with_reads",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "What license is this project under?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Is there a CI pipeline configured?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "What Python version does this require?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Are there any known issues with the current release?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Does the gate fail open or closed by default?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Is this the right approach for our use case?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Can you explain what that error message means?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "What are the tradeoffs of this design?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Why did we choose TF-IDF over embeddings?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "added a new helper yesterday, does it look right",
+      "intent_class": "qa_simple",
+      "source": "eval",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "I just pushed some changes, any thoughts on the approach?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "before we touch any code, is the current config valid?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "someone mentioned removing that flag, was that done?",
+      "intent_class": "qa_simple",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Show me the role gate logic",
+      "intent_class": "qa_with_reads",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Where is the model regex defined?",
+      "intent_class": "qa_with_reads",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "What does check_role_gate return on deny?",
+      "intent_class": "qa_with_reads",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Which file handles proposal promotion?",
+      "intent_class": "qa_with_reads",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Find the function that parses the routing tag",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Show the code where session IDs are generated",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "What does the _hints function return?",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Point me to the bit that handles the deny decision",
+      "intent_class": "qa_with_reads",
+      "source": "eval",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Can you pull up the threshold constants?",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Let me see how the event payload is structured",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I need to look at the retry storm detection code",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Walk me through that specific function's return value",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Open up the file where noise filtering happens",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "What's in the config directory?",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "How is GateResult defined in the common module?",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Check if there's a test for the short-session filter",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "where are routing decisions made in the codebase?",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "point me to where routing decisions are made",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "which file is responsible for classifying intent?",
+      "intent_class": "qa_with_reads",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "what does the whole pipeline look like end to end?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "what does the pipeline look like?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "walk me through the pipeline from start to finish",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "How does the whole gate chain flow from prompt to deny?",
+      "intent_class": "qa_architecture",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Give me an overview of the routing architecture",
+      "intent_class": "qa_architecture",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "How do these gates and hooks relate to each other?",
+      "intent_class": "qa_architecture",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Explain the overall structure of the cost-router system",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "How are the scripts organized and what calls what?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "What is the data flow from prompt submission to gate decision?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "How does the reward signal feed back into routing decisions?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Walk me through how the pieces of this system fit together end to end",
+      "intent_class": "qa_architecture",
+      "source": "eval",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "I want to understand the full request lifecycle across every hook",
+      "intent_class": "qa_architecture",
+      "source": "eval",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Paint the big picture of how all these modules interact",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Help me map out the dependency chain between scripts",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "What's the mental model for how routing decisions propagate?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "How does everything connect from intent classification through to cost attribution?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Describe the interplay between the gate system and the policy manager",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Analyze this project's guardrails as an expert and propose improvements, then score both approaches",
+      "intent_class": "qa_architecture",
+      "source": "eval",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "before we touch any code, what would break if we removed the fail-open fallback",
+      "intent_class": "qa_architecture",
+      "source": "eval",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "If I were to redesign the hook chain from scratch, what constraints would I need to preserve?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Compare the current gate design against a pure policy-engine approach",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "describe the pipeline from user prompt to gate decision",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "describe the pipeline from user prompt to gate decision in detail",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "how does data flow through the full pipeline?",
+      "intent_class": "qa_architecture",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Fix the regex in enforce_role_gates.py",
+      "intent_class": "agentic_action",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Add a new gate for shell commands",
+      "intent_class": "agentic_action",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Refactor classify_intent to use scoring",
+      "intent_class": "agentic_action",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Please build the eval script we discussed",
+      "intent_class": "agentic_action",
+      "source": "eval",
+      "difficulty": "canonical",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Create a test file for the semantic scorer",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Delete the unused legacy script",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Rename the _hints function to get_intent_hints",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Update the config to include new threshold values",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Can you tidy up this file a bit",
+      "intent_class": "agentic_action",
+      "source": "eval",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "This function needs to be cleaned up so tests pass",
+      "intent_class": "agentic_action",
+      "source": "eval",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Make this module more readable",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Get the tests green again",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Wire up the new scorer into the existing pipeline",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Split this giant function into smaller pieces",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Set up the config file we need for thresholds",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Hook the semantic layer into the classify path",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Go ahead and implement the plan we agreed on",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "I'd like you to address the TODO comments in that file",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "That test is flaky, make it deterministic",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "The output format isn't what we want, adjust it to match the spec",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I don't want a plan, I want the implementation done now",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "set up a proper conftest.py with shared fixtures for all gate tests",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I'll dispatch a worker for this task",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "orchestrating build task via subagent dispatch",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Let me spin up a subagent to handle the refactor",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Delegating this to a Task worker — too large for inline",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I will dispatch a Task() to implement this feature",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "sending bulk work to worker for processing via subagent dispatch",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Spawning a subagent to run the eval suite",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "This warrants a separate Task — handing off now",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "FO role: dispatching the implementation to a worker agent",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I'll route this to a build worker via Task()",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Offloading the build step to a background worker",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Time to delegate — dispatching via Task() now",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Routing this chunk of work to a subagent for parallel execution",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I'll hand this off to a worker since it involves multiple file edits",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Kicking off a dispatch task for the migration script",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Handing off to subagent — orchestrating from FO role",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Create a task for the worker to handle the migration",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Build out the implementation in a separate worker thread",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Let me set up a task dispatch for the test suite run",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Going to run this through a subagent pipeline instead of inline",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Let me read this file first to understand the context",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I'll edit the function directly to fix the bug",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Looking at the code, I see the issue in line 42",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Now I'll write the test for the new function",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I'm going to modify the config file inline",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Reading the gate script to understand its structure",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I see the problem — let me patch this directly",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Scanning the file for the relevant function definition",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Writing the implementation now, line by line",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I'll open the script and make the change myself",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Working on the fix right here in the current session",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Tackling this change myself — no dispatch needed",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Going through the code now to find the root cause",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Making the adjustment directly in the config file",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Checking the test output — adjusting the assertion inline",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I notice the import is missing — adding it directly",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "This is a simple change, editing the file now",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Just a quick tweak — updating the threshold value inline",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Nothing complex here, reading the test output and fixing the assertion",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Small patch — I see the typo on line 15 and I'm correcting it",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "create json tickets in knowledge/plans",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "create ticket files in the plans folder",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "write the tickets to plans directory",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "create multiple json tickets in this directory",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "generate yaml stubs under backlog folder",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "add ticket entries to knowledge/plans path",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "create task json files in plans",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "write backlog items as json to plans folder",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "drop the tickets into the plans folder",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "dump ticket json under knowledge plans",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "put the stub files into backlog directory",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "save records as yaml in the tasks folder",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "populate the plans folder with ticket files",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "output the entries to plans as json",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "store the task items under plans directory",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "we discussed the tickets — go ahead and write them out",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "those five tickets from the plan — make the files",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "scaffold the json for each ticket now",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "take that ticket list and materialize it",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "remember those backlog items — persist them as json",
+      "intent_class": "agentic_action",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "write the release notes for this sprint",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "draft a summary of what we covered in this session",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "generate the changelog entry for this feature",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "create a readme for this module",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "write up the design doc for this approach",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "reasoning",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "put together the release notes",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "compile a session summary for the team",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "produce the changelog for v2",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "jot these notes down into a markdown file",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "write a brief spec document for the hook redesign",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "document what we decided here so we don't forget",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "write down the key decisions from this brainstorm",
+      "intent_class": "content_generation",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "dispatching this to a worker agent",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "sending this task to a background subagent",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "routing this to a haiku worker",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "delegating the file reads to an explore agent",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "spinning up a task for this",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "handing this off to a subagent to handle",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "offloading this to a background worker",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "sending this over to a worker to handle",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "farming this out to a fresh agent",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "this is better handled by a dedicated worker — dispatching now",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "context is getting large so spinning up a subagent for this",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "letting a task handle this rather than doing it inline",
+      "intent_class": "dispatch_justification",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "reading the config file now",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "editing the gate function directly",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "looking at the test output right now",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "working on the implementation inline",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "fixing this in place without dispatching",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "currently reading the implementation file",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "making the change here directly",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "handling it myself without a subagent",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "doing this inline rather than dispatching",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "I am updating the threshold value now",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "writing the function now — no need to dispatch",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "patching the gate logic here in this session",
+      "intent_class": "inline_narration",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "mechanical"
+    },
+    {
+      "text": "Evaluate the tradeoff between running every gate synchronously and running them in parallel",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Should we keep the semantic scorer given its operational cost versus the accuracy it adds?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Assess the cost impact of routing all explore work to haiku instead of sonnet",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Justify the decision to cap concurrent workers at three",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Compare the efficiency of batching micro-tasks into one worker against one worker per task",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "What will happen to our monthly spend if we turn off prompt caching for subagents?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "How efficient is the current dispatch pipeline compared with a purely inline workflow?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "As a data architect, evaluate whether the reward log should move to a database",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Is a canary rollout viable for the new routing matrix, and what is the cost benefit?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "What is the cost impact of doubling the exemplar set on classification latency?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Give me a go no go on enabling the bulk verify gate for all sessions",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "canonical",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Weigh the risks of shipping the new thresholds this week, product owner view",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Evaluate whether paying for sonnet reviewers is justified when haiku validators catch most structural problems",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Compare the cost of handling long research tasks as one large job versus several small jobs, and justify which is cheaper",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Help me decide whether a workaround for the flaky hook beats a proper fix, considering the tradeoff",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Should we move the gate counters to a shared store given how rarely sessions overlap?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "How much would we save if half of our reads went through triage first?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Assess the downsides and tradeoff of letting the orchestrator classify intent instead of a script",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Evaluate whether tighter floors on accuracy would actually reduce regressions or just slow us down",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Give me a risk register for adopting a semantic classifier in the critical path",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "paraphrase",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Compare strict gating on every tool call against sampling a fraction of calls: cheaper or safer?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Is our evaluation methodology sound enough to trust the numbers? Assess it before we decide anything",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Honestly, should we keep the whole routing layer, or does its operational cost outweigh the benefit?",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "ambiguous"
+    },
+    {
+      "text": "Rank these three approaches to intent detection by long-term maintenance burden and justify the ranking",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Compare haiku and sonnet for classification work and tell me which tradeoff we should accept",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "reasoning"
+    },
+    {
+      "text": "Assess the cost impact, in time and tokens, of keeping two parallel suites alive",
+      "intent_class": "analytical_qa",
+      "source": "manual",
+      "difficulty": "adversarial",
+      "work_complexity": "ambiguous"
+    }
+  ]
+}

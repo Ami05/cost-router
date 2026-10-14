@@ -1,0 +1,1 @@
+{"hook_event_name":"PreToolUse","session_id":"test-session-123","tool_name":"Edit","tool_input":{"file_path":"scripts/foo.py","old_string":"a","new_string":"b"}}

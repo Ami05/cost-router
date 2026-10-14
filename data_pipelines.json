@@ -1,0 +1,1225 @@
+{
+  "metadata": {
+    "version": "3.1",
+    "generated": "2026-10-04",
+    "source": "hooks/hooks.json + scripts/_config.py + scripts/_fileio.py audited against production data dir (~/.claude/plugins/local/cost-router/data)",
+    "total_pipelines": 18,
+    "includes": [
+      "triggerMatcher",
+      "reads",
+      "writes",
+      "outputs",
+      "config_keys",
+      "enrichments"
+    ],
+    "changes_from_v3.0": [
+      "Added pipeline_status (per-pipeline working/idle/manual verdict from the 2026-10-03 production telemetry scan)",
+      "Added 5 dev-code data files missing from data_file_cross_reference: counterfactual_log.jsonl, pipeline_trigger_state.json, worker_response_violations.jsonl, claude_classifier.jsonl, perturbation_benchmark.json (all absent in prod)",
+      "shadow_log.py cursor changed from positional hwm index to timestamp cursor hwm_ts (live in prod: hwm_ts present, shadow_routes 4 -> 5 rows)",
+      "Dev/prod sync check 2026-10-03: hooks.json, config.json and scripts/ identical except dev-only scripts/replay_governors.py (offline utility, not hook-invoked)"
+    ],
+    "changes_from_v2": [
+      "usage.jsonl no longer exists: USAGE_LOG is an alias of routing_events.jsonl; events are routed by _fileio.append_event into token_events / routing_events / session_events / reward_events / extraction_errors (new pipeline 17)",
+      "UserPromptSubmit: semantic_scorer now runs inside classify_intent.py; analytical_dispatch_reminder.py and the standalone semantic_scorer step removed from the hook chain",
+      "SubagentStop hook chain added (check_routing, agent_call_tracker, validate_worker_response) - new pipeline 16",
+      "Stop chain now includes quality_signal.py, session_hook.py (replaces session_summary.py), file_graph_refresh.py; session_summary.py is a library, not a hook",
+      "New state/telemetry files documented: quality_signal, dispatch_registry, agent_call_stats, subagent_state, gate_counters, gate_daily, dispatch_denials, candidate_table, checkpoint_state, read_gate_state, read_state, sequential_explore_state, shadow_log_state, file_hash_stats, file_graph_refresh_stats, warnings, extraction_errors, usage_archive",
+      "generate_reports.py / render_proposals.py replaced in the report path by cost_report_renderer.py"
+    ],
+    "data_dir": {
+      "production": "~/.claude/plugins/local/cost-router/data",
+      "override": "DATA_DIR in scripts/_config.py",
+      "snapshot_date": "2026-10-03",
+      "top_level_files": 37,
+      "file_graphs_cache": "~670k files, ~2.6 GB (file-graphs/) - unbounded growth, see notes"
+    },
+    "hook_events": [
+      "UserPromptSubmit",
+      "PreToolUse",
+      "PostToolUse",
+      "SubagentStart",
+      "SubagentStop",
+      "Stop"
+    ]
+  },
+  "pipeline_status": {
+    "_basis": "production data dir scan 2026-10-03: every JSONL log written within the last day; no doc/prod contradictions",
+    "working": {
+      "2": "token_events, routing_events (intent 450), semantic_low_confidence fresh",
+      "3": "gate_events 25k rows, read_state, file_hash_registry fresh",
+      "4": "routing_declared 166 events, gate_events fresh",
+      "5": "dispatch_worker_declared 83, dispatch_denials 73, dispatch_registry fresh",
+      "6": "subagent_state.json + subagent_dispatch 239 events",
+      "7": "tool_invocation 1012 events, file_hash_stats",
+      "8": "reward_log 875 rows, session_events 115, quality_signal, gate_daily, confidence_scores fresh",
+      "9": "Runs end to end since the hwm_ts fix (2026-10-03): shadow_routes 136 rows, pipeline_trigger_state.json fired at 132 routes (result ok), shadow_evaluation refreshed for 10 rules. Produced no proposals because of a candidate-reward key mismatch in shadow_evaluator.py (fixed 2026-10-04, see open_observations); verify proposals now appear.",
+      "10": "stderr only; inferred from fresh inputs",
+      "12": "graph_update_stats.json present",
+      "14": "gate_events + session_log 15.5k rows fresh",
+      "16": "subagent_stop_telemetry 105 events, agent_call_stats fresh",
+      "17": "all split logs fresh; reward_events and debug.log legitimately absent",
+      "18": "quality_signal.json and gate_daily.json fresh; signal.jsonl absent"
+    },
+    "partial": {
+      "11": "build_file_graph writes graphs but file_graph_refresh_stats.json and stale_refresh.json are absent; file-graphs/ is 675k files / 2.6 GB with no effective cap observed."
+    },
+    "manual": {
+      "13": "on-demand /cost-report; impact-card.html absent",
+      "15": "on-demand / CI; routing_validation.json absent"
+    },
+    "not_applicable": {
+      "1": "no SessionStart hook; rules load natively"
+    }
+  },
+  "pipelines": [
+    {
+      "id": 1,
+      "pipelineName": "Session Initialization & Rule Injection",
+      "trigger": "SessionStart (not present in hooks/hooks.json)",
+      "triggerMatcher": "n/a",
+      "pipelineFlow": "Claude Code loads .claude/rules/model-router.md natively; resync copies rules/ into the plugin. No hook or script is involved.",
+      "reads": [
+        "rules/model-router.md",
+        "config.json"
+      ],
+      "writes": [],
+      "outputs": [
+        "Routing rules available as session context"
+      ],
+      "config_keys": [],
+      "notes": "Kept for completeness; there is no SessionStart hook entry."
+    },
+    {
+      "id": 2,
+      "pipelineName": "User Prompt Intake & Classification",
+      "trigger": "UserPromptSubmit",
+      "triggerMatcher": "all prompts (single sequential chain)",
+      "pipelineFlow": "estimate_tokens.py --event prompt → check_routing.py --event reset → compact_log.py --checkpoint → detect_resume.py → read_gate.py --event reset → classify_intent.py (loads semantic_scorer internally)",
+      "reads": [
+        "config.json",
+        "routing_state.json",
+        "resume_state.json",
+        "checkpoint_state.json",
+        "config/intent_exemplars.json",
+        "config/semantic_thresholds.json"
+      ],
+      "writes": [
+        "token_events.jsonl (prompt)",
+        "routing_events.jsonl (intent, ...)",
+        "routing_state.json",
+        "resume_state.json",
+        "checkpoint_state.json",
+        "read_gate_state.json",
+        "semantic_low_confidence.jsonl",
+        "usage_archive.jsonl (via compact_log rotation)"
+      ],
+      "outputs": [
+        "Intent classification + confidence",
+        "forced FO state if resume detected",
+        "low-confidence semantic logs"
+      ],
+      "config_keys": [
+        "classify_intent",
+        "claude_classifier",
+        "token_estimation",
+        "resume_gate",
+        "logging"
+      ]
+    },
+    {
+      "id": 3,
+      "pipelineName": "Pre-Read Gate Chain",
+      "trigger": "PreToolUse",
+      "triggerMatcher": "Read|read_file",
+      "pipelineFlow": "gates.py --gate pre_read (enforce_role_gates::event_pre_read, check_read_repeat, routing/tier counting, file_hash_guard) → read_gate.py → build_file_graph.py",
+      "reads": [
+        "routing_state.json",
+        "read_gate_state.json",
+        "read_state.json",
+        "file_hash_registry.json",
+        "file-graphs/*.json",
+        "config.json"
+      ],
+      "writes": [
+        "gate_events.jsonl",
+        "gate_counters.json",
+        "session_log.jsonl",
+        "read_state.json",
+        "read_gate_state.json",
+        "file_hash_registry.json",
+        "file_hash_history.json",
+        "file-graphs/*.json",
+        "semantic_role_alignment.jsonl"
+      ],
+      "outputs": [
+        "Allow/Deny/Nudge",
+        "file hashes recorded",
+        "symbol graph hint/cache"
+      ],
+      "config_keys": [
+        "read_repeat",
+        "thresholds",
+        "graph",
+        "context_pressure"
+      ]
+    },
+    {
+      "id": 4,
+      "pipelineName": "Pre-Write Gate Chain",
+      "trigger": "PreToolUse",
+      "triggerMatcher": "Write|Edit|Bash|Shell|StrReplace|Task|Delete|NotebookEdit",
+      "pipelineFlow": "gates.py --gate pre_write → enforce_role_gates::event_pre_write (deny Edit/Write for FO/RB) → check_routing::event_gate (turn-tagged verdict) → inline_mutation / shell / inline_narration gates → file_hash_guard pre-edit staleness warning",
+      "reads": [
+        "routing_state.json",
+        "file_hash_registry.json",
+        "sequential_explore_state.json",
+        "config.json"
+      ],
+      "writes": [
+        "gate_events.jsonl",
+        "gate_counters.json",
+        "session_log.jsonl",
+        "routing_state.json",
+        "routing_events.jsonl (routing_declared)",
+        "sequential_explore_state.json"
+      ],
+      "outputs": [
+        "Allow/Deny/Nudge",
+        "stale file warnings"
+      ],
+      "config_keys": [
+        "inline_mutation_gate",
+        "shell_gate",
+        "inline_narration_gate",
+        "sequential_explore_threshold",
+        "routing"
+      ],
+      "enrichments": "ENRICH-001: routing_declared events carry model, intent, rule_id"
+    },
+    {
+      "id": 5,
+      "pipelineName": "Pre-Task Gate Chain",
+      "trigger": "PreToolUse",
+      "triggerMatcher": "Agent|Task",
+      "pipelineFlow": "gates.py --gate pre_task → enforce_explicit_model → explore-model gate → dispatch_context_gate (budget) → validate_dispatch_schema (JSON protocol) → bws_enforcer / dispatch_enforcer (concurrency, warm-worker reuse, continuation) ; agent_call_tracker + spawn_tracker register the dispatch",
+      "reads": [
+        "routing_state.json",
+        "dispatch_registry.json",
+        "dispatch_context_state.json",
+        "candidate_table.json",
+        "scripts/docs/dispatch-schemas.json",
+        "config.json"
+      ],
+      "writes": [
+        "gate_events.jsonl",
+        "gate_counters.json",
+        "dispatch_denials.jsonl",
+        "dispatch_registry.json",
+        "agent_call_stats.json",
+        "dispatch_context_state.json",
+        "routing_events.jsonl (dispatch_context_estimate, dispatch_worker_declared, ...)",
+        "session_log.jsonl"
+      ],
+      "outputs": [
+        "Allow/Deny",
+        "dispatch logged to registry",
+        "schema validation result"
+      ],
+      "config_keys": [
+        "concurrency",
+        "progress_ledger",
+        "dispatch_context",
+        "estimate_dispatch_context",
+        "continuation",
+        "routing_matrix",
+        "model_tiers"
+      ],
+      "enrichments": "SPO-007: token ceilings per worker type; BWS: concurrency cap + wave barrier + progress ledger"
+    },
+    {
+      "id": 6,
+      "pipelineName": "SubagentStart Tier Enforcement",
+      "trigger": "SubagentStart",
+      "triggerMatcher": "all subagents",
+      "pipelineFlow": "check_routing.py --event subagent_start → classify_dispatch_work + tier_of_model → tier-mismatch deny or mark active subagent",
+      "reads": [
+        "routing_state.json",
+        "subagent_state.json",
+        "dispatch_registry.json"
+      ],
+      "writes": [
+        "routing_state.json",
+        "subagent_state.json",
+        "routing_events.jsonl"
+      ],
+      "outputs": [
+        "Deny on tier mismatch",
+        "Active-subagent marker with TTL"
+      ],
+      "config_keys": [
+        "model_tiers",
+        "routing_matrix",
+        "progress_ledger"
+      ]
+    },
+    {
+      "id": 7,
+      "pipelineName": "Post-Tool-Use Tracking & Graph Invalidation",
+      "trigger": "PostToolUse",
+      "triggerMatcher": "default (all tools); Task; Write|Edit|MultiEdit; Bash|Shell",
+      "pipelineFlow": "ALL: estimate_tokens.py --event tool → check_routing.py --event scan | Task: read_gate.py --event reset | Write/Edit/MultiEdit: mark_graph_stale.py → file_hash_guard.py --event post_edit | Bash/Shell: detect_revert.py",
+      "reads": [
+        "file-graphs/*.json",
+        "routing_state.json",
+        "read_gate_state.json"
+      ],
+      "writes": [
+        "token_events.jsonl (tool)",
+        "routing_events.jsonl",
+        "extraction_errors.jsonl",
+        "calibration.jsonl",
+        "routing_state.json",
+        "stale_refresh.json",
+        "file-graphs/*.json",
+        "file_hash_registry.json",
+        "file_hash_history.json",
+        "file_hash_stats.json",
+        "read_gate_state.json",
+        "reward_events.jsonl / reward_log.jsonl (revert signals)"
+      ],
+      "outputs": [
+        "Token event logged",
+        "graphs marked stale",
+        "post-edit hashes",
+        "revert signals"
+      ],
+      "config_keys": [
+        "token_estimation",
+        "reward"
+      ]
+    },
+    {
+      "id": 8,
+      "pipelineName": "Session Stop, Reward & Rollup (sequential)",
+      "trigger": "Stop",
+      "triggerMatcher": "session end (sequential portion)",
+      "pipelineFlow": "estimate_tokens --event response → check_routing --event scan → reward_signal → shadow_log → confidence_score → quality_signal → session_hook → graph_gc → compact_log → session_impact",
+      "reads": [
+        "token_events.jsonl",
+        "routing_events.jsonl",
+        "session_log.jsonl",
+        "reward_log.jsonl",
+        "routing_state.json",
+        "shadow_routes.jsonl",
+        "scenario_library.json",
+        "gate_counters.json",
+        "agent_call_stats.json",
+        "file_hash_stats.json",
+        "file_graph_refresh_stats.json",
+        "project_registry.json"
+      ],
+      "writes": [
+        "token_events.jsonl (response)",
+        "reward_log.jsonl",
+        "reward_events.jsonl",
+        "shadow_routes.jsonl",
+        "shadow_log_state.json",
+        "confidence_scores.json",
+        "candidate_table.json",
+        "quality_signal.json",
+        "session_events.jsonl (session_summary, role_distribution, routing_gap, session_output_high)",
+        "routing_events.jsonl (alert_fallback_slo, alert_model_key_none, ...)",
+        "gate_daily.json",
+        "project_registry.json",
+        "signal.jsonl",
+        "scenario_library.json",
+        "usage_archive.jsonl",
+        "checkpoint_state.json"
+      ],
+      "outputs": [
+        "Reward signals",
+        "shadow routes",
+        "confidence scores",
+        "per-intent quality signal",
+        "session summary events",
+        "daily gate rollup",
+        "stale graph cleanup",
+        "log compaction"
+      ],
+      "config_keys": [
+        "reward",
+        "quality_signal",
+        "session_limits",
+        "session_cost_budget",
+        "logging"
+      ],
+      "enrichments": "ENRICH-001: shadow_log events carry model, intent, rule_id; shadow_log_state holds a high-water-mark index"
+    },
+    {
+      "id": 9,
+      "pipelineName": "Feedback Loop Orchestration (async)",
+      "trigger": "Stop",
+      "triggerMatcher": "session end (async)",
+      "pipelineFlow": "pipeline_trigger.py (async) → threshold check on shadow_routes → shadow_evaluator → proposal_writer → policy_manager → policy_gc --apply",
+      "reads": [
+        "shadow_routes.jsonl",
+        "reward_log.jsonl",
+        "confidence_scores.json",
+        "policy_proposals.json",
+        "quality_signal.json",
+        "tune_state.json"
+      ],
+      "writes": [
+        "shadow_evaluation.json",
+        "policy_proposals.json",
+        "policy_changelog.jsonl",
+        "routing_changelog.json",
+        "pinned_rules.json",
+        "rules/model-router.md"
+      ],
+      "outputs": [
+        "Evaluation results",
+        "policy proposals",
+        "auto-applied routing changes with undo tokens"
+      ],
+      "config_keys": [
+        "feedback_loop",
+        "pipeline_trigger",
+        "policy",
+        "policy_gc",
+        "tune_savings"
+      ],
+      "enrichments": "ENRICH-001: shadow_evaluator extracts intent from rule_id; proposal_writer confidence lookup is dual-keyed (intent + rule_id)",
+      "notes": "Production state 2026-10-03: shadow_routes 4 rows (last write 2026-09-30), policy_proposals empty, shadow_evaluation tiny - loop is largely idle. policy_changelog.jsonl, routing_changelog.json, pinned_rules.json, tune_state.json are code-referenced but not present in production."
+    },
+    {
+      "id": 10,
+      "pipelineName": "Session Impact Report & Display",
+      "trigger": "Stop",
+      "triggerMatcher": "session end (sequential, last step)",
+      "pipelineFlow": "session_impact.py → impact_calculator.compute_session() → summary box to stderr",
+      "reads": [
+        "session_log.jsonl",
+        "token_events.jsonl",
+        "routing_events.jsonl",
+        "session_events.jsonl",
+        "gate_events.jsonl",
+        "warnings.jsonl",
+        "config.json",
+        "scripts/pricing.json"
+      ],
+      "writes": [],
+      "outputs": [
+        "Cost-savings summary box on stderr",
+        "resume_used_count in impact totals"
+      ],
+      "config_keys": [
+        "impact",
+        "session_cost_budget"
+      ]
+    },
+    {
+      "id": 11,
+      "pipelineName": "File Graph Build & Refresh",
+      "trigger": "PreToolUse Read (build_file_graph.py) / Stop async (file_graph_refresh.py)",
+      "triggerMatcher": "Read|read_file; session end (async)",
+      "pipelineFlow": "(1) build_file_graph.py on each Read: parse, extract symbols, cache | (2) file_graph_refresh.py on Stop: walk registered projects, rebuild stale graphs incrementally",
+      "reads": [
+        "project_registry.json",
+        "source files",
+        "file_hash_registry.json",
+        "stale_refresh.json"
+      ],
+      "writes": [
+        "file-graphs/*.json",
+        "file_hash_registry.json",
+        "file_graph_refresh_stats.json"
+      ],
+      "outputs": [
+        "Per-file symbol graphs keyed by content hash"
+      ],
+      "config_keys": [
+        "graph"
+      ],
+      "notes": "Production file-graphs/ holds ~670k files (~2.6 GB); graph_gc.py bounds this on Stop - verify the cap is effective."
+    },
+    {
+      "id": 12,
+      "pipelineName": "Incremental Graph Update (async)",
+      "trigger": "Stop",
+      "triggerMatcher": "session end (async)",
+      "pipelineFlow": "graph_update.py → read project_registry → walk source → staleness check → rebuild",
+      "reads": [
+        "project_registry.json",
+        "file-graphs/*.json",
+        "source files"
+      ],
+      "writes": [
+        "file-graphs/*.json",
+        "graph_update_stats.json"
+      ],
+      "outputs": [
+        "Incrementally refreshed graphs"
+      ],
+      "config_keys": [
+        "graph"
+      ]
+    },
+    {
+      "id": 13,
+      "pipelineName": "Usage & Cost Reporting",
+      "trigger": "Manual (/cost-report skill, cost_report_renderer.py)",
+      "triggerMatcher": "on-demand",
+      "pipelineFlow": "load session_log + event logs → impact_calculator.compute_window() → cost_report_renderer (HTML card + markdown) ",
+      "reads": [
+        "session_log.jsonl",
+        "token_events.jsonl",
+        "routing_events.jsonl",
+        "session_events.jsonl",
+        "gate_daily.json",
+        "quality_signal.json",
+        "confidence_scores.json",
+        "candidate_table.json",
+        "policy_changelog.jsonl",
+        "routing_changelog.json",
+        "signal.jsonl",
+        "warnings.jsonl",
+        "scripts/pricing.json"
+      ],
+      "writes": [
+        "data/impact-card.html",
+        "markdown reports"
+      ],
+      "outputs": [
+        "HTML impact card",
+        "weekly digest",
+        "escalation / repeat-read nudges"
+      ],
+      "config_keys": [
+        "impact",
+        "analyze_routing"
+      ]
+    },
+    {
+      "id": 14,
+      "pipelineName": "Gate Event Logging & Session Log Forwarding",
+      "trigger": "Any gate execution (pre_read, pre_write, pre_task)",
+      "triggerMatcher": "gates.py chains",
+      "pipelineFlow": "gates.py::_log_gate_event() → gate_events.jsonl for every decision → selected decisions forwarded to session_log.jsonl; counters bumped in gate_counters.json",
+      "reads": [
+        "gate decision context (inline)"
+      ],
+      "writes": [
+        "gate_events.jsonl",
+        "session_log.jsonl",
+        "gate_counters.json",
+        "dispatch_denials.jsonl (pre_task denials)"
+      ],
+      "outputs": [
+        "Gate ledger",
+        "waste-prevention entries"
+      ],
+      "config_keys": [
+        "logging"
+      ],
+      "notes": "Largest files in production: gate_events.jsonl 6.3 MB / 22k rows, session_log.jsonl 3.1 MB / 13.5k rows."
+    },
+    {
+      "id": 15,
+      "pipelineName": "Routing Validation (Manual / CI)",
+      "trigger": "Manual (run_routing_validation.py) / CI",
+      "triggerMatcher": "on-demand",
+      "pipelineFlow": "run_routing_validation.py → tests/routing_scenarios.json → classify_intent + check_routing per scenario → pass/fail",
+      "reads": [
+        "tests/routing_scenarios.json",
+        "config/intent_exemplars.json",
+        "config/semantic_thresholds.json"
+      ],
+      "writes": [
+        "data/routing_validation.json"
+      ],
+      "outputs": [
+        "Validation results file",
+        "stdout summary"
+      ],
+      "config_keys": [],
+      "notes": "Not hook-triggered. Not present in production data dir."
+    },
+    {
+      "id": 16,
+      "pipelineName": "SubagentStop Validation & Call Tracking",
+      "trigger": "SubagentStop",
+      "triggerMatcher": "all subagents (3 separate hook entries)",
+      "pipelineFlow": "check_routing.py --event subagent_stop → agent_call_tracker.py --event subagent_stop → validate_worker_response.py --event subagent_stop",
+      "reads": [
+        "routing_state.json",
+        "subagent_state.json",
+        "dispatch_registry.json"
+      ],
+      "writes": [
+        "routing_state.json",
+        "subagent_state.json",
+        "dispatch_registry.json",
+        "agent_call_stats.json",
+        "routing_events.jsonl (per-dispatch usage record)",
+        "session_log.jsonl"
+      ],
+      "outputs": [
+        "Dispatch completion record",
+        "warm-worker / reuse stats",
+        "worker response validation"
+      ],
+      "config_keys": [
+        "progress_ledger",
+        "concurrency",
+        "continuation"
+      ],
+      "notes": "NEW since v2.0."
+    },
+    {
+      "id": 17,
+      "pipelineName": "Event Log Router (append_event)",
+      "trigger": "Any script emitting an event",
+      "triggerMatcher": "library call, not a hook",
+      "pipelineFlow": "_fileio.append_event(record) → add ts + schema_version → TTL dedup → _event_log_for_io() routes by type → append; rotation/compaction by compact_log.py / log_compactor.py into usage_archive.jsonl",
+      "reads": [
+        "config.json (logging)"
+      ],
+      "writes": [
+        "token_events.jsonl (prompt, response, tool)",
+        "session_events.jsonl (data_reset, role_distribution, routing_gap, session_output_high, session_summary)",
+        "reward_events.jsonl (explicit_feedback, reward_signal)",
+        "extraction_errors.jsonl (extraction_fallback)",
+        "routing_events.jsonl (all other ~40 types; USAGE_LOG alias)",
+        "usage_archive.jsonl (rotated)",
+        "warnings.jsonl (via _config._warn)",
+        "debug.log"
+      ],
+      "outputs": [
+        "Split event logs replacing the legacy usage.jsonl"
+      ],
+      "config_keys": [
+        "logging",
+        "token_estimation"
+      ],
+      "notes": "NEW/REPLACES usage.jsonl. Emitters include estimate_tokens, check_routing, routing_resolver, dispatch_enforcer, dispatch_budget_enforcer, agent_call_tracker, spawn_tracker, session_hook, reward_signal, detect_resume, detect_revert, classify_intent, confidence_score, context_estimator, routing_state_manager. reward_events.jsonl is not present in production (no explicit_feedback/reward_signal routed there yet); reward_log.jsonl is the live reward ledger."
+    },
+    {
+      "id": 18,
+      "pipelineName": "Quality Signal & Daily Rollups",
+      "trigger": "Stop",
+      "triggerMatcher": "session end (sequential)",
+      "pipelineFlow": "quality_signal.py → quality_signal.json (per-intent window) ; session_hook.py → gate_daily.json, signal.jsonl, project_registry.json, agent/file hash stats rollup",
+      "reads": [
+        "reward_log.jsonl",
+        "gate_counters.json",
+        "agent_call_stats.json",
+        "file_hash_stats.json",
+        "file_graph_refresh_stats.json"
+      ],
+      "writes": [
+        "quality_signal.json",
+        "gate_daily.json",
+        "signal.jsonl",
+        "project_registry.json"
+      ],
+      "outputs": [
+        "quality_multiplier input for reward_signal",
+        "daily gate usage rollup"
+      ],
+      "config_keys": [
+        "quality_signal",
+        "reward"
+      ],
+      "notes": "NEW since v2.0. Production gate_daily.json holds 4 days (2026-09-30..2026-10-03)."
+    }
+  ],
+  "data_file_cross_reference": {
+    "_legend": "written_by/read_by derived from scripts/ grep and hook chains; 'touched_by' = referenced but read/write role not separated. prod = state in ~/.claude/plugins/local/cost-router/data on 2026-10-03.",
+    "usage.jsonl": {
+      "status": "REMOVED - alias of routing_events.jsonl (USAGE_LOG); see pipeline 17",
+      "prod": "absent"
+    },
+    "routing_events.jsonl": {
+      "written_by": [
+        "_fileio.append_event (all emitters)"
+      ],
+      "read_by": [
+        "analyze_routing.py",
+        "impact_calculator.py",
+        "cost_report_renderer.py",
+        "backfill_reward_log.py",
+        "reward_signal.py",
+        "pipeline_trigger.py"
+      ],
+      "prod": "577 KB, 2.5k rows; catch-all for ~40 event types (intent, dispatch_worker_declared, dispatch_context_estimate, ...)"
+    },
+    "token_events.jsonl": {
+      "written_by": [
+        "estimate_tokens.py"
+      ],
+      "read_by": [
+        "impact_calculator.py",
+        "session_impact.py"
+      ],
+      "prod": "1.34 MB, 5.8k rows; prompt/response/tool"
+    },
+    "session_events.jsonl": {
+      "written_by": [
+        "session_hook.py"
+      ],
+      "read_by": [
+        "session_impact.py",
+        "cost_report_renderer.py"
+      ],
+      "prod": "28 KB, 83 rows; role_distribution, session_summary, routing_gap"
+    },
+    "reward_events.jsonl": {
+      "written_by": [
+        "reward_signal.py",
+        "explicit feedback path"
+      ],
+      "read_by": [
+        "confidence_score.py"
+      ],
+      "prod": "absent"
+    },
+    "usage_archive.jsonl": {
+      "written_by": [
+        "compact_log.py",
+        "log_compactor.py"
+      ],
+      "read_by": [
+        "analysis scripts"
+      ],
+      "prod": "877 KB, 4k rows; rotated events incl. alert_fallback_slo, cost_budget_warning, dispatch_context_estimate"
+    },
+    "session_log.jsonl": {
+      "written_by": [
+        "gates.py",
+        "check_routing.py",
+        "enforce_role_gates.py",
+        "session_hook.py"
+      ],
+      "read_by": [
+        "session_impact.py",
+        "impact_calculator.py",
+        "cost_report_renderer.py",
+        "validate_data_integrity.py"
+      ],
+      "prod": "3.07 MB, 13.5k rows"
+    },
+    "gate_events.jsonl": {
+      "written_by": [
+        "gates.py::_log_gate_event"
+      ],
+      "read_by": [
+        "session_impact.py",
+        "cost_report_renderer.py"
+      ],
+      "prod": "6.31 MB, 22k rows (largest log)"
+    },
+    "gate_counters.json": {
+      "written_by": [
+        "gates.py",
+        "routing_detectors.py",
+        "session_state.py"
+      ],
+      "read_by": [
+        "analyze_routing.py",
+        "session_hook.py"
+      ],
+      "prod": "1.5 KB"
+    },
+    "gate_daily.json": {
+      "written_by": [
+        "session_hook.py"
+      ],
+      "read_by": [
+        "cost_report_renderer.py"
+      ],
+      "prod": "442 B, 4 days"
+    },
+    "dispatch_denials.jsonl": {
+      "written_by": [
+        "validate_dispatch_schema.py"
+      ],
+      "read_by": [
+        "analyze_routing.py"
+      ],
+      "prod": "8.4 KB, 67 rows"
+    },
+    "dispatch_registry.json": {
+      "written_by": [
+        "agent_call_tracker.py",
+        "check_routing.py",
+        "spawn_tracker.py"
+      ],
+      "read_by": [
+        "bws_enforcer.py",
+        "dispatch_enforcer.py",
+        "context_estimator.py"
+      ],
+      "prod": "294 KB"
+    },
+    "dispatch_context_state.json": {
+      "written_by": [
+        "dispatch_context_gate.py"
+      ],
+      "read_by": [
+        "dispatch_context_gate.py"
+      ],
+      "prod": "2.6 KB"
+    },
+    "agent_call_stats.json": {
+      "written_by": [
+        "agent_call_tracker.py",
+        "spawn_tracker.py"
+      ],
+      "read_by": [
+        "session_hook.py",
+        "check_budget_status.py",
+        "routing_resolver.py",
+        "routing_state_manager.py"
+      ],
+      "prod": "55 KB"
+    },
+    "subagent_state.json": {
+      "written_by": [
+        "session_state.py"
+      ],
+      "read_by": [
+        "check_routing.py"
+      ],
+      "prod": "152 B"
+    },
+    "routing_state.json": {
+      "written_by": [
+        "check_routing.py",
+        "routing_state_manager.py",
+        "detect_resume.py"
+      ],
+      "read_by": [
+        "all gate chains"
+      ],
+      "prod": "63 KB"
+    },
+    "resume_state.json": {
+      "written_by": [
+        "detect_resume.py",
+        "session_state.py"
+      ],
+      "read_by": [
+        "detect_resume.py"
+      ],
+      "prod": "265 B (last write 2026-10-01)"
+    },
+    "checkpoint_state.json": {
+      "written_by": [
+        "compact_log.py"
+      ],
+      "read_by": [
+        "compact_log.py"
+      ],
+      "prod": "55 B"
+    },
+    "read_gate_state.json": {
+      "written_by": [
+        "read_gate.py"
+      ],
+      "read_by": [
+        "read_gate.py"
+      ],
+      "prod": "134 B"
+    },
+    "read_state.json": {
+      "written_by": [
+        "check_read_repeat.py"
+      ],
+      "read_by": [
+        "check_read_repeat.py"
+      ],
+      "prod": "5 KB"
+    },
+    "sequential_explore_state.json": {
+      "written_by": [
+        "sequential_explore_gate.py"
+      ],
+      "read_by": [
+        "sequential_explore_gate.py"
+      ],
+      "prod": "52 B"
+    },
+    "file_hash_registry.json": {
+      "written_by": [
+        "file_hash_guard.py"
+      ],
+      "read_by": [
+        "file_hash_guard.py",
+        "file_graph_refresh.py"
+      ],
+      "prod": "84 KB"
+    },
+    "file_hash_history.json": {
+      "written_by": [
+        "file_hash_guard.py"
+      ],
+      "read_by": [
+        "file_hash_guard.py"
+      ],
+      "prod": "56 KB"
+    },
+    "file_hash_stats.json": {
+      "written_by": [
+        "file_hash_guard.py"
+      ],
+      "read_by": [
+        "session_hook.py"
+      ],
+      "prod": "259 B"
+    },
+    "file-graphs/*.json": {
+      "written_by": [
+        "build_file_graph.py",
+        "file_graph_refresh.py",
+        "graph_update.py",
+        "mark_graph_stale.py"
+      ],
+      "read_by": [
+        "build_file_graph.py",
+        "graph_gc.py",
+        "pre_read chain"
+      ],
+      "prod": "~670k files, ~2.6 GB"
+    },
+    "stale_refresh.json": {
+      "written_by": [
+        "mark_graph_stale.py"
+      ],
+      "read_by": [
+        "graph_store.py",
+        "graph_gc.py"
+      ],
+      "prod": "absent"
+    },
+    "graph_update_stats.json": {
+      "written_by": [
+        "graph_update.py"
+      ],
+      "read_by": [
+        "diagnostic"
+      ],
+      "prod": "3.4 KB"
+    },
+    "file_graph_refresh_stats.json": {
+      "written_by": [
+        "file_graph_refresh.py"
+      ],
+      "read_by": [
+        "session_hook.py"
+      ],
+      "prod": "absent"
+    },
+    "project_registry.json": {
+      "written_by": [
+        "session_hook.py"
+      ],
+      "read_by": [
+        "file_graph_refresh.py",
+        "graph_update.py",
+        "session_summary.py"
+      ],
+      "prod": "138 B"
+    },
+    "reward_log.jsonl": {
+      "written_by": [
+        "reward_signal.py",
+        "backfill_reward_log.py"
+      ],
+      "read_by": [
+        "shadow_evaluator.py",
+        "confidence_score.py",
+        "quality_signal.py",
+        "join_outcomes.py",
+        "learn_patterns.py",
+        "pipeline_trigger.py"
+      ],
+      "prod": "239 KB, 804 rows"
+    },
+    "quality_signal.json": {
+      "written_by": [
+        "quality_signal.py"
+      ],
+      "read_by": [
+        "reward_signal.py",
+        "cost_report_renderer.py"
+      ],
+      "prod": "189 B"
+    },
+    "shadow_routes.jsonl": {
+      "written_by": [
+        "shadow_log.py"
+      ],
+      "read_by": [
+        "shadow_evaluator.py",
+        "pipeline_trigger.py"
+      ],
+      "prod": "136 rows as of 2026-10-03 (was 4 before the hwm_ts fix)"
+    },
+    "shadow_log_state.json": {
+      "written_by": [
+        "shadow_log.py"
+      ],
+      "read_by": [
+        "shadow_log.py"
+      ],
+      "prod": "45 B"
+    },
+    "shadow_evaluation.json": {
+      "written_by": [
+        "shadow_evaluator.py"
+      ],
+      "read_by": [
+        "proposal_writer.py"
+      ],
+      "prod": "640 B"
+    },
+    "confidence_scores.json": {
+      "written_by": [
+        "confidence_score.py"
+      ],
+      "read_by": [
+        "proposal_writer.py",
+        "shadow_evaluator.py",
+        "pipeline_trigger.py",
+        "cost_report_renderer.py"
+      ],
+      "prod": "864 B",
+      "notes": "dual-keyed by intent + rule_id (ENRICH-001)"
+    },
+    "candidate_table.json": {
+      "written_by": [
+        "confidence_score.py"
+      ],
+      "read_by": [
+        "check_routing.py",
+        "dispatch_enforcer.py",
+        "cost_report_renderer.py"
+      ],
+      "prod": "58 B (empty rules)"
+    },
+    "policy_proposals.json": {
+      "written_by": [
+        "proposal_writer.py",
+        "policy_manager.py"
+      ],
+      "read_by": [
+        "policy_gc.py",
+        "cost_report_renderer.py"
+      ],
+      "prod": "65 B (empty)"
+    },
+    "policy_changelog.jsonl": {
+      "written_by": [
+        "policy_manager.py",
+        "changelog.py",
+        "policy_store.py"
+      ],
+      "read_by": [
+        "cost_report_renderer.py"
+      ],
+      "prod": "absent"
+    },
+    "routing_changelog.json": {
+      "written_by": [
+        "policy_gc.py"
+      ],
+      "read_by": [
+        "cost_report_renderer.py"
+      ],
+      "prod": "absent"
+    },
+    "pinned_rules.json": {
+      "written_by": [
+        "policy_manager.py"
+      ],
+      "read_by": [
+        "confidence_score.py",
+        "dispatch_enforcer.py"
+      ],
+      "prod": "absent"
+    },
+    "tune_state.json": {
+      "touched_by": [
+        "analyze_routing.py",
+        "routing_renderer.py"
+      ],
+      "prod": "absent"
+    },
+    "scenario_library.json": {
+      "written_by": [
+        "compact_log.py"
+      ],
+      "read_by": [
+        "reward_signal.py",
+        "confidence_score.py",
+        "policy_manager.py"
+      ],
+      "prod": "59 KB"
+    },
+    "semantic_low_confidence.jsonl": {
+      "written_by": [
+        "semantic_scorer.py (via classify_intent.py)"
+      ],
+      "read_by": [
+        "offline exemplar tuning"
+      ],
+      "prod": "17 KB, 68 rows",
+      "notes": "v2.0 claimed classify_intent reads this; it only triggers the writes."
+    },
+    "semantic_role_alignment.jsonl": {
+      "written_by": [
+        "enforce_role_gates.py"
+      ],
+      "read_by": [
+        "offline analysis"
+      ],
+      "prod": "absent"
+    },
+    "signal.jsonl": {
+      "touched_by": [
+        "session_hook.py",
+        "cost_report_renderer.py"
+      ],
+      "prod": "absent"
+    },
+    "calibration.jsonl": {
+      "written_by": [
+        "estimate_tokens.py"
+      ],
+      "read_by": [
+        "offline analysis"
+      ],
+      "prod": "absent"
+    },
+    "extraction_errors.jsonl": {
+      "written_by": [
+        "_fileio.append_event (extraction_fallback)"
+      ],
+      "read_by": [
+        "diagnostic"
+      ],
+      "prod": "105 B, 1 row (2026-09-30)"
+    },
+    "warnings.jsonl": {
+      "written_by": [
+        "_config._warn()"
+      ],
+      "read_by": [
+        "session_impact.py",
+        "session_summary.py",
+        "cost_report_renderer.py"
+      ],
+      "prod": "166 KB, 1k rows"
+    },
+    "debug.log": {
+      "written_by": [
+        "_fileio._debug_log"
+      ],
+      "read_by": [
+        "manual"
+      ],
+      "prod": "absent"
+    },
+    "data/routing_validation.json": {
+      "written_by": [
+        "run_routing_validation.py"
+      ],
+      "read_by": [
+        "manual"
+      ],
+      "prod": "absent"
+    },
+    "data/impact-card.html": {
+      "written_by": [
+        "cost_report_renderer.py"
+      ],
+      "read_by": [
+        "user"
+      ],
+      "prod": "absent"
+    },
+    "rules/model-router.md": {
+      "written_by": [
+        "policy_gc.py (auto-apply)"
+      ],
+      "read_by": [
+        "Claude Code (native .claude/rules load)"
+      ]
+    },
+    "scripts/docs/dispatch-schemas.json": {
+      "written_by": [
+        "static"
+      ],
+      "read_by": [
+        "validate_dispatch_schema.py"
+      ]
+    },
+    "counterfactual_log.jsonl": {
+      "written_by": [
+        "policy_store.py::append_counterfactual_log (:170)"
+      ],
+      "read_by": [],
+      "prod": "absent",
+      "notes": "Pipeline 9; no reader found."
+    },
+    "pipeline_trigger_state.json": {
+      "written_by": [
+        "pipeline_trigger.py (:103)"
+      ],
+      "read_by": [
+        "pipeline_trigger.py (:80)"
+      ],
+      "prod": "present since 2026-10-03: last_triggered_at, routes_at_last_trigger, last_chain_result",
+      "notes": "Cooldown cursor for pipeline 9; written once the trigger passes its threshold."
+    },
+    "worker_response_violations.jsonl": {
+      "written_by": [
+        "validate_worker_response.py::_log_violation (:167)"
+      ],
+      "read_by": [],
+      "prod": "absent",
+      "notes": "Pipeline 16; absent means no violations logged; no reader found."
+    },
+    "claude_classifier.jsonl": {
+      "written_by": [
+        "semantic_scorer.py::_log_claude_backend (:81)"
+      ],
+      "read_by": [],
+      "prod": "absent",
+      "notes": "Only written when the claude_classifier backend is enabled."
+    },
+    "perturbation_benchmark.json": {
+      "written_by": [
+        "perturbation_benchmark.py::run_benchmark (:275)"
+      ],
+      "read_by": [],
+      "prod": "absent",
+      "notes": "Offline benchmark, not hook-triggered."
+    },
+    "scripts/replay_governors.py": {
+      "status": "dev-only offline utility, not referenced in hooks/hooks.json; not part of any pipeline",
+      "prod": "not synced"
+    }
+  },
+  "open_observations": [
+    "file-graphs/ is ~670k files / 2.6 GB in production; confirm graph_gc.py caps it.",
+    "Feedback loop (pipeline 9) is idle in production: 4 shadow_routes, empty proposals, no changelog/pinned_rules/tune_state files. Root cause: shadow_log.py used a positional hwm index (2105) past the 1000-line read_events() window, skipping every new row; fixed with a timestamp cursor (hwm_ts) in state.",
+    "Dormant (flagged \"prod\": \"absent\" in data_file_cross_reference, written only by code paths that have not fired): pinned_rules.json, tune_state.json, routing_changelog.json, policy_changelog.jsonl, calibration.jsonl, signal.jsonl, stale_refresh.json, file_graph_refresh_stats.json.",
+    "reward_events.jsonl never created in production although reward_signal events are routed there by design; reward_log.jsonl is the live ledger.",
+    "calibration.jsonl, signal.jsonl, stale_refresh.json, file_graph_refresh_stats.json, semantic_role_alignment.jsonl are written by code paths that have not fired in production.",
+    "Write-only files with no reader in scripts/: counterfactual_log.jsonl, worker_response_violations.jsonl, claude_classifier.jsonl, perturbation_benchmark.json - decide whether to add a consumer or drop the writer.",
+    "The hooks.json PostToolUse/Write chain does not call session_summary.py; it is a library used by session_hook.py.",
+    "Pipeline 9 produces no proposals: shadow_evaluation.json shows candidate_expected_reward 0.0 for all 10 rules (actual_mean_reward 1.0, improvement_delta -1.0, selection_bias_warning true). Candidate roles are only logged as hypotheticals and never executed, so there is no candidate reward data. Cause of the 0.0: shadow_evaluator.py compute_rule_evaluation looked up candidate history under (rule_id, candidate_role), e.g. ('DIRECT:qa_simple', 'FW'), but composite rule_ids lead with the actual role so that key never exists. Fixed 2026-10-04 to use '<candidate_role>:<intent>' with a legacy-key fallback; re-check shadow_evaluation.json and policy_proposals.json after a few sessions on the resynced build."
+  ]
+}

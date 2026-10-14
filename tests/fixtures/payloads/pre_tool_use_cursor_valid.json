@@ -1,0 +1,1 @@
+{"hook_event_name":"PreToolUse","sessionId":"test-session-456","toolName":"Edit","modelName":"claude-sonnet-4-6","toolInput":{"file_path":"scripts/foo.py","old_string":"a","new_string":"b"}}

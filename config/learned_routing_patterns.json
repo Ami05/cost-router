@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-09-14T14:37:58.350928+00:00",
+  "total_sessions": 12,
+  "cheap_patterns": [
+    {
+      "rule_id": "FO:agentic_action",
+      "intent": "agentic_action",
+      "role": "FO",
+      "avg_reward": 1.0,
+      "count": 78
+    },
+    {
+      "rule_id": "DIRECT:qa_simple",
+      "intent": "qa_simple",
+      "role": "DIRECT",
+      "avg_reward": 1.0,
+      "count": 54
+    },
+    {
+      "rule_id": "FO:qa_simple",
+      "intent": "qa_simple",
+      "role": "FO",
+      "avg_reward": 1.0,
+      "count": 38
+    },
+    {
+      "rule_id": "FO:content_generation",
+      "intent": "content_generation",
+      "role": "FO",
+      "avg_reward": 1.0,
+      "count": 25
+    },
+    {
+      "rule_id": "DIRECT:agentic_action",
+      "intent": "agentic_action",
+      "role": "DIRECT",
+      "avg_reward": 1.0,
+      "count": 32
+    },
+    {
+      "rule_id": "FO:inline_narration",
+      "intent": "inline_narration",
+      "role": "FO",
+      "avg_reward": 1.0,
+      "count": 32
+    },
+    {
+      "rule_id": "FO:qa_with_reads",
+      "intent": "qa_with_reads",
+      "role": "FO",
+      "avg_reward": 1.0,
+      "count": 5
+    },
+    {
+      "rule_id": "FO:dispatch_justification",
+      "intent": "dispatch_justification",
+      "role": "FO",
+      "avg_reward": 1.0,
+      "count": 60
+    },
+    {
+      "rule_id": "DIRECT:dispatch_justification",
+      "intent": "dispatch_justification",
+      "role": "DIRECT",
+      "avg_reward": 1.0,
+      "count": 18
+    }
+  ],
+  "expensive_patterns": []
+}

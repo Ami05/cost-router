@@ -1,0 +1,14 @@
+[
+  {
+    "file_path": "module.py",
+    "edit_type": "str_replace",
+    "old_content": "    result = 0\n    for item in items:\n        result += item.price * item.quantity\n    return result",
+    "new_content": "    output = 0\n    for item in items:\n        output += item.price * item.quantity\n    return output"
+  },
+  {
+    "file_path": "module.py",
+    "edit_type": "str_replace",
+    "old_content": "    result = parse(raw_input)\n    result = validate(result)\n    return result",
+    "new_content": "    output = parse(raw_input)\n    output = validate(output)\n    return output"
+  }
+]

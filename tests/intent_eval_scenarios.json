@@ -1,0 +1,365 @@
+{
+  "_doc": "FL-eval: labeled golden set for classify_intent.py (scripts/classify_intent.py). Covers canonical, paraphrase, and adversarial phrasings per intent class. 'known_gap: true' marks cases the current keyword classifier is expected to FAIL today — kept as regression targets for a future semantic-boundary upgrade, not skipped.",
+  "_source_hash": "e8dac846586b14125e7ec9d88ab362269400f5aaa3dc481376927fad03ed738c",
+  "_source_hash_doc": "sha256 of scripts/classify_intent.py as of the last regeneration of this golden set. TEST-003 (tests/eval/test_golden_file_freshness.py) fails if this drifts from the live file's hash, signaling scenarios need review/regeneration.",
+  "scenarios": [
+    {
+      "id": "QS-1",
+      "prompt": "What is the job of the dispatch_context_gate?",
+      "expected_intent": "qa_with_reads",
+      "category": "canonical",
+      "notes": "'what does the <code symbol>' is a code-symbol question; classify_intent.py deliberately routes it to qa_with_reads (relabeled from qa_simple; was known_gap); reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "QS-2",
+      "prompt": "Was the fail-open design chosen on purpose?",
+      "expected_intent": "qa_simple",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "QS-3",
+      "prompt": "Is pytest the test runner in this repo?",
+      "expected_intent": "qa_simple",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "QR-1",
+      "prompt": "Pull up the role gate logic for me",
+      "expected_intent": "qa_with_reads",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "QR-2",
+      "prompt": "In which file does the model regex live?",
+      "expected_intent": "qa_with_reads",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "QR-3",
+      "prompt": "What value comes back from check_role_gate when it denies?",
+      "expected_intent": "qa_with_reads",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "QR-4",
+      "prompt": "Which file which file handles canary promotion?",
+      "expected_intent": "qa_with_reads",
+      "category": "canonical"
+    },
+    {
+      "id": "QA-1",
+      "prompt": "Describe how a prompt travels through the gate chain until a deny",
+      "expected_intent": "qa_architecture",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "QA-2",
+      "prompt": "Summarize the architecture of the routing layer",
+      "expected_intent": "qa_architecture",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "QA-3",
+      "prompt": "How are the gates and the hooks connected to one another?",
+      "expected_intent": "qa_architecture",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "AA-1",
+      "prompt": "Correct the regex inside enforce_role_gates.py",
+      "expected_intent": "agentic_action",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "AA-2",
+      "prompt": "Introduce a gate that covers shell commands",
+      "expected_intent": "agentic_action",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "AA-3",
+      "prompt": "Rework classify_intent so it uses scoring",
+      "expected_intent": "agentic_action",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "AA-4",
+      "prompt": "Go ahead and build the eval script from our earlier discussion",
+      "expected_intent": "agentic_action",
+      "category": "canonical",
+      "notes": "reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "QA-P1",
+      "prompt": "Explain how all the parts of this system connect from start to finish",
+      "expected_intent": "qa_architecture",
+      "category": "paraphrase",
+      "notes": "no literal architecture/flow/structure keyword; paraphrase with no literal architecture/flow/structure keyword; reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "QA-P2",
+      "prompt": "I'd like to grasp the whole request lifecycle through every hook",
+      "expected_intent": "qa_architecture",
+      "category": "paraphrase",
+      "notes": "paraphrase — 'lifecycle' not in architecture keyword set; reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "AA-P1",
+      "prompt": "Could you neaten up this file slightly",
+      "expected_intent": "agentic_action",
+      "category": "paraphrase",
+      "notes": "no verb in _AGENTIC_VERBS set; reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "AA-P2",
+      "prompt": "This function requires cleanup so the tests will pass",
+      "expected_intent": "agentic_action",
+      "category": "paraphrase",
+      "known_gap": true,
+      "notes": "paraphrase — 'cleaned up' not in agentic verb set; reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "QR-P1",
+      "prompt": "Show me the section that deals with the deny decision",
+      "expected_intent": "qa_with_reads",
+      "category": "paraphrase",
+      "notes": "paraphrase — 'point me to' not matched as code-ref keyword; reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "ADV-1",
+      "prompt": "As an expert, analyze this project's guardrails, suggest improvements, and score both options",
+      "expected_intent": "qa_architecture",
+      "category": "adversarial",
+      "notes": "no agentic verb, no architecture substring hit -> classifier currently returns qa_simple; reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "ADV-2",
+      "prompt": "just added a helper yesterday, is it ok",
+      "expected_intent": "qa_simple",
+      "category": "adversarial",
+      "notes": "contains verb-stem 'add' inside 'added'; checks whole-word match doesn't over-fire on past-tense review questions; reworded in T2 to remove verbatim overlap with exemplars"
+    },
+    {
+      "id": "ADV-3",
+      "prompt": "prior to editing anything, what breaks if the fail-open fallback is dropped",
+      "expected_intent": "qa_architecture",
+      "category": "adversarial",
+      "notes": "contains 'removed' (agentic verb stem) but is a hypothetical/analysis question, not an action request; reworded in T2 to remove verbatim overlap with exemplars",
+      "known_gap": true
+    },
+    {
+      "id": "CG-1",
+      "prompt": "Create a HTML file explaining how evals work",
+      "expected_intent": "content_generation",
+      "category": "canonical"
+    },
+    {
+      "id": "CG-2",
+      "prompt": "Generate documentation for the gate scripts",
+      "expected_intent": "content_generation",
+      "category": "canonical"
+    },
+    {
+      "id": "CG-3",
+      "prompt": "Write a README for this project",
+      "expected_intent": "content_generation",
+      "category": "canonical"
+    },
+    {
+      "id": "CG-4",
+      "prompt": "Build a template for the routing config",
+      "expected_intent": "content_generation",
+      "category": "canonical"
+    },
+    {
+      "id": "CG-P1",
+      "prompt": "Draft a quick guide for new contributors",
+      "expected_intent": "content_generation",
+      "category": "paraphrase"
+    },
+    {
+      "id": "CG-P2",
+      "prompt": "Make a markdown file summarizing the architecture decisions",
+      "expected_intent": "content_generation",
+      "category": "paraphrase"
+    },
+    {
+      "id": "CG-ADV1",
+      "prompt": "Can you create a plan for how we'd restructure the gates",
+      "expected_intent": "content_generation",
+      "category": "adversarial",
+      "notes": "'create a' matches content_gen before agentic verbs; planning output is bulk text"
+    },
+    {
+      "id": "AQ-1",
+      "prompt": "Evaluate the tradeoff between caching gate results and recomputing them each turn",
+      "expected_intent": "analytical_qa",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical analytical_qa scenario"
+    },
+    {
+      "id": "AQ-2",
+      "prompt": "Should we move the reward log into a database given our data pipeline constraints?",
+      "expected_intent": "analytical_qa",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical analytical_qa scenario"
+    },
+    {
+      "id": "AQ-3",
+      "prompt": "Assess the cost impact of sending all summaries to a haiku worker",
+      "expected_intent": "analytical_qa",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical analytical_qa scenario"
+    },
+    {
+      "id": "AQ-4",
+      "prompt": "Is a staged rollout viable for the stricter floors, and does the cost benefit justify it?",
+      "expected_intent": "analytical_qa",
+      "category": "paraphrase",
+      "notes": "T1 hand-written paraphrase analytical_qa scenario"
+    },
+    {
+      "id": "AQ-5",
+      "prompt": "Compare the efficiency of one shared worker against several narrow ones for batch edits",
+      "expected_intent": "analytical_qa",
+      "category": "paraphrase",
+      "notes": "T1 hand-written paraphrase analytical_qa scenario"
+    },
+    {
+      "id": "AQ-6",
+      "prompt": "Give me a go no go on enabling the new gate by default",
+      "expected_intent": "analytical_qa",
+      "category": "adversarial",
+      "notes": "T1 hand-written adversarial analytical_qa scenario"
+    },
+    {
+      "id": "AQ-7",
+      "prompt": "Worth it or not: paying for a second reviewer on every change?",
+      "expected_intent": "analytical_qa",
+      "category": "adversarial",
+      "notes": "T1 hand-written adversarial analytical_qa scenario; classifier currently predicts agentic_action",
+      "known_gap": true
+    },
+    {
+      "id": "DJ-1",
+      "prompt": "I'm dispatching this to a subagent since it touches twenty files",
+      "expected_intent": "dispatch_justification",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical dispatch_justification scenario"
+    },
+    {
+      "id": "DJ-2",
+      "prompt": "Sending this to a haiku worker because it is purely mechanical",
+      "expected_intent": "dispatch_justification",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical dispatch_justification scenario"
+    },
+    {
+      "id": "DJ-3",
+      "prompt": "Handing off the bulk edit to a worker so my context stays small",
+      "expected_intent": "dispatch_justification",
+      "category": "paraphrase",
+      "notes": "T1 hand-written paraphrase dispatch_justification scenario"
+    },
+    {
+      "id": "DJ-4",
+      "prompt": "This is too large to do inline, so a worker will take it",
+      "expected_intent": "dispatch_justification",
+      "category": "paraphrase",
+      "notes": "T1 hand-written paraphrase dispatch_justification scenario"
+    },
+    {
+      "id": "DJ-5",
+      "prompt": "Spinning up an agent to run the whole suite while I keep planning",
+      "expected_intent": "dispatch_justification",
+      "category": "paraphrase",
+      "notes": "T1 hand-written paraphrase dispatch_justification scenario; classifier currently predicts agentic_action",
+      "known_gap": true
+    },
+    {
+      "id": "DJ-6",
+      "prompt": "Rather than grinding through this myself, a fresh agent gets the job",
+      "expected_intent": "dispatch_justification",
+      "category": "adversarial",
+      "notes": "T1 hand-written adversarial dispatch_justification scenario",
+      "known_gap": true
+    },
+    {
+      "id": "IN-1",
+      "prompt": "Reading the gate script now to see how it decides",
+      "expected_intent": "inline_narration",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical inline_narration scenario; classifier currently predicts qa_simple",
+      "known_gap": true
+    },
+    {
+      "id": "IN-2",
+      "prompt": "Doing this myself, no dispatch needed for a one-line change",
+      "expected_intent": "inline_narration",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical inline_narration scenario"
+    },
+    {
+      "id": "IN-3",
+      "prompt": "Quick fix, I'll patch the typo right here",
+      "expected_intent": "inline_narration",
+      "category": "paraphrase",
+      "notes": "T1 hand-written paraphrase inline_narration scenario; classifier currently predicts agentic_action",
+      "known_gap": true
+    },
+    {
+      "id": "IN-4",
+      "prompt": "Just editing the config in place since it is tiny",
+      "expected_intent": "inline_narration",
+      "category": "adversarial",
+      "notes": "T1 hand-written adversarial inline_narration scenario"
+    },
+    {
+      "id": "QS-4",
+      "prompt": "Is the semantic layer optional?",
+      "expected_intent": "qa_simple",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical qa_simple scenario"
+    },
+    {
+      "id": "QS-5",
+      "prompt": "Do we use ruff for linting here?",
+      "expected_intent": "qa_simple",
+      "category": "canonical",
+      "notes": "T1 hand-written canonical qa_simple scenario"
+    },
+    {
+      "id": "QS-6",
+      "prompt": "Is the fail-closed mode the default?",
+      "expected_intent": "qa_simple",
+      "category": "paraphrase",
+      "notes": "T1 hand-written paraphrase qa_simple scenario"
+    },
+    {
+      "id": "QS-7",
+      "prompt": "Are hooks enabled in this project?",
+      "expected_intent": "qa_simple",
+      "category": "paraphrase",
+      "notes": "T1 hand-written paraphrase qa_simple scenario"
+    }
+  ]
+}

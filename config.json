@@ -1,0 +1,422 @@
+{
+  "sequential_explore_threshold": 3,
+  "routing": {
+    "dispatch_gate_threshold": 14,
+    "flip_flop_threshold": 2,
+    "dispatch_nudge_threshold": 3,
+    "dispatch_deny_threshold": 8,
+    "session_dispatch_deny_threshold": 12,
+    "fast_path_call_limit": 3,
+    "fast_path_same_file_limit": 2,
+    "fast_path_max_prompt_chars": 250,
+    "max_tracked_sessions": 200,
+    "subagent_ttl_seconds": 300,
+    "active_subagent_stale_ttl_seconds": 1800,
+    "transcript_tail_bytes": 1000000,
+    "large_write_line_threshold": 150,
+    "large_write_byte_threshold": 5120,
+    "tier_history_cap": 20,
+    "assistant_snippet_chars": 500,
+    "task_target_hash_chars": 500,
+    "direct_bulk_write_limit": 3,
+    "fw_scope_file_limit": 5,
+    "explore_required_model": {
+      "claude": "haiku",
+      "cursor": "composer-2.5-fast"
+    },
+    "rd2_promote_threshold": 0.3,
+    "orchestrator_nudge_deny_after": 3,
+    "dispatch_attempts_abort_ceiling": 100
+  },
+  "concurrency": {
+    "_doc": "Bounded Wave Scheduler \u2014 operational rules in CLAUDE.md \u00a7 BWS. max_inflight_subagents cap enforced in check_routing.py; serialize_verify blocks verification while wave units are active. session_budget_pct: cumulative fan-out cap (BWS-T2-004, unboundedOrchestrator obs-4) \u2014 once a session's actual cumulative subagent dispatch cost (agent_call_stats.json cumulative_cost_usd) reaches this fraction of session_cost_budget.budget_usd, new Task/Agent dispatch is denied via _session_dispatch_cap_active in routing_state_manager.py. session_budget_override_limit: opt-in bounded escape from that cap; 0 (default) disables it, N>0 lets a dispatch containing the token session-budget-override bypass the cap up to N times per session (dispatch-budget-override does not apply). Deliberately lower than session_cost_budget.warning_pcts' high_water mark so fan-out is capped before the escape-hatch (_dispatch_debt_active) needs to engage.",
+    "max_inflight_subagents": 3,
+    "serialize_verify": true,
+    "session_budget_pct": 0.6,
+    "session_budget_override_limit": 0
+  },
+  "dispatch_context": {
+    "budget_pct": 0.7,
+    "nudge_pct_min": 70.0,
+    "over_budget_pct": 100.0,
+    "prompt_bloat_threshold": 10.0,
+    "subagent_infra_tokens": {
+      "fast": 40000,
+      "reasoning": 70000,
+      "default": 70000
+    },
+    "resume_ttl_seconds": 300,
+    "bands": {
+      "_doc": "DGC-002 dispatch context bands (tokens). min_useful_work_tokens / expected_output_tokens per model tier; target_min < target_max <= hard_limit; safety_reserve_tokens held back from the window. mode: off|warn|enforce, missing/invalid -> warn.",
+      "min_useful_work_tokens": {"fast": 40000, "default": 70000, "reasoning": 70000},
+      "expected_output_tokens": {"fast": 8000, "default": 15000, "reasoning": 25000},
+      "target_min": 140000,
+      "target_max": 165000,
+      "hard_limit": 180000,
+      "safety_reserve_tokens": 10000,
+      "mode": "warn"
+    },
+    "affinity": {
+      "_doc": "DGC-002 warm-worker affinity matching threshold (0..1).",
+      "threshold": 0.3
+    },
+    "enforce_decision": {
+      "_doc": "DGC-002 evidence ceilings before a dispatch_context gate may move from warn to enforce. fp_ceiling_* are false-positive rates and must lie in (0,1); sample_bounds_* bound the upper confidence limit.",
+      "fp_ceiling_hard_deny": 0.01,
+      "fp_ceiling_nudge": 0.05,
+      "fp_ceiling_default": 0.02,
+      "min_runs": 300,
+      "min_runs_per_worker_type": 100,
+      "sample_bounds_upper_pct": 0.95,
+      "sample_bounds_upper_limit": 0.02
+    },
+    "_resume_ttl_constraint": "HARD LIMIT: resume_ttl_seconds must never exceed 300 (5 min). Anthropic subagent prompt cache TTL is 5 min \u2014 resuming after cache expiry pays full cold-write price (1.25x base input on entire prefix), making resume MORE expensive than a fresh spawn. This is a cost protection rule, not a bug. Raising this value silently degrades cost savings."
+  },
+  "progress_ledger": {
+    "_doc": "Bounded Wave Scheduler \u2014 operational rules in CLAUDE.md \u00a7 BWS. max_stall_markers: consecutive tool calls without progress markers before deny; null/absent disables stall detection. max_stall_seconds: wall-clock ceiling (TICKET-037) independent of tool-call count, so orchestrator workers on design/refactor steps \u2014 which make far fewer tool calls per minute than shell/mutation workers \u2014 still surface a partial-report checkpoint at least once every 2-3 minutes, matching the shell-worker convention. Either threshold tripping denies; null/absent disables that check only. worker_overrides (TICKET-039): per dispatch-schema `worker` type (mutation, read) overrides for either key, resolved via the dispatch_registry.json `dispatch_worker` field recorded at SubagentStart; a worker type with no entry here, or a dispatch whose worker type can't be resolved, falls back to the top-level keys above unchanged. mutation/read get a longer, ~10-minute-class wall-clock ceiling (600s) since diagnose-then-edit and search-then-report cycles legitimately run longer between narrated checkpoints than shell/orchestrator's tighter 3-minute cadence.",
+    "max_stall_markers": 6,
+    "max_stall_seconds": 180,
+    "mode": "warn",
+    "kill": {
+      "_doc": "DGC-002 progress-ledger kill switch: grace_denied_calls denied calls tolerated before a stalled worker is flagged. mode: off|warn|enforce, missing/invalid -> warn.",
+      "grace_denied_calls": 3,
+      "mode": "warn"
+    },
+    "worker_overrides": {
+      "mutation": {"max_stall_seconds": 600},
+      "read": {"max_stall_seconds": 600}
+    },
+    "strict_profile": {
+      "_doc": "DGC-103: strict stall thresholds for shell/orchestrator workers. Inert until gate enforcement is enabled. These values are NOT read by dispatch_enforcer._stall_thresholds_for() until the strict profile gate ships; they are present here as a reference and for validation only.",
+      "shell": {"max_stall_seconds": 90, "max_stall_markers": 3, "heartbeat_seconds": 30},
+      "orchestrator": {"max_stall_seconds": 90, "max_stall_markers": 3, "heartbeat_seconds": 30}
+    }
+  },
+  "continuation": {
+    "_doc": "DGC-002 continuation manifest limits for chained subagent dispatches. mode: off|warn|enforce, missing/invalid -> warn.",
+    "max_depth": 3,
+    "max_compact_chars": 2000,
+    "max_remaining_items": 10,
+    "no_progress_halts": true,
+    "manifest_required": false,
+    "mode": "warn"
+  },
+  "thresholds": {
+    "read_full_max_lines": 300,
+    "edit_dispatch_min_lines": 500,
+    "write_existing_max_lines": 150,
+    "write_existing_max_kb": 5,
+    "role_read_max_lines": 50
+  },
+  "routing_matrix": {
+    "_doc": "Maps work_complexity intent to model assignments per role and dispatch limits. Used by OC-1 gate, PROD-19 gate. max_round_trips keys are retained for legacy tolerance but are no longer enforced by any gate — budget enforcement now flows through _dispatch_debt_active() in check_routing.py. test_runner is enforced by scripts/enforce_test_runner_model.py (pre_task gate): a dispatch whose prompt implies running a test suite must declare model=test_runner for the session's intent, or it is denied and told to split into a separate test_runner-tier shell dispatch instead of chaining into a reasoning-tier worker. Opus subagent dispatches are permanently blocked by scripts/enforce_explicit_model.py. effort (low|medium|high|xhigh|max) is set per intent independently of model tier; a sonnet worker on a bounded sub-task may run below high.",
+    "_default": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 8,
+      "warning_pct": 70
+    },
+    "mechanical": {
+      "effort": "low",
+      "orchestrator": "sonnet",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 5
+    },
+    "additive": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 8
+    },
+    "design": {
+      "effort": "xhigh",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 10
+    },
+    "ambiguous": {
+      "effort": "xhigh",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "sonnet",
+      "max_round_trips": 8
+    },
+    "debug": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 8
+    },
+    "bulk-edit": {
+      "effort": "low",
+      "orchestrator": "sonnet",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 4
+    },
+    "qa_simple": {
+      "effort": "low",
+      "orchestrator": "haiku",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 3
+    },
+    "qa_with_reads": {
+      "effort": "low",
+      "orchestrator": "sonnet",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 4
+    },
+    "qa_architecture": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 6
+    },
+    "analytical_qa": {
+      "effort": "medium",
+      "orchestrator": "sonnet",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 4
+    },
+    "content_generation": {
+      "effort": "medium",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 5
+    },
+    "agentic_action": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 8
+    }
+  },
+  "verification_tiers": {
+    "_doc": "TICKET-040 (fix-7): documents the tiered verification policy implemented in scripts/verification_tier.py and wired into the bulk-verify gate in scripts/check_routing.py. Not read by any gate directly (no numeric knobs to tune) — the classification rule and keyword list live in verification_tier.py as the single source of truth; this entry exists for discoverability per the config.json convention.",
+    "light": "single-file mutation dispatch (files list length 1), pattern fully decided, no schema/API-surface-change keyword in pattern/why/constraints -> a targeted single-file test run is sufficient; no mandatory full independent re-run.",
+    "full": "anything else (multi-file, orchestrator/design dispatch, or a schema/API/contract/migration keyword present) -> existing mandatory full independent bulk-verify subagent re-run, unchanged."
+  },
+  "read_repeat": {
+    "max_tracked_sessions": 200,
+    "deny_after_repeat_count": 2
+  },
+  "context_pressure": {
+    "_doc": "RC-7 live main-session context gate. ratio = last main-session assistant usage (input + cache_read + cache_creation) / model context window. mode: off = no-op; warn = never deny, report would_deny and bump would_deny:context_pressure; enforce = deny at ratio >= threshold. Missing/invalid mode -> warn. Unknown model window (default fallback) fails open.",
+    "mode": "warn",
+    "warn_pct": 0.70,
+    "threshold": 0.85,
+    "hook_mode": "warn",
+    "hook_warn_tokens": 160000,
+    "hook_urgent_tokens": 180000,
+    "hook_tail_bytes": 524288
+  },
+  "resume_gate": {
+    "work_unit_threshold": 3,
+    "early_call_threshold": 5,
+    "short_prompt_max_chars": 30,
+    "max_tracked_sessions": 200
+  },
+  "token_estimation": {
+    "correction": {
+      "sonnet_5": {
+        "prose": 1.5,
+        "code": 2.0,
+        "symbol": 2.5
+      },
+      "default": {
+        "prose": 1.5,
+        "code": 2.0,
+        "symbol": 2.5
+      }
+    },
+    "context_windows": {
+      "default": 200000,
+      "composer": 200000,
+      "sonnet_45": 200000,
+      "sonnet_46_5": 1000000,
+      "sonnet_5_5": 1000000
+    },
+    "force_fixed_window": 200000,
+    "_doc": "A positive value forces every model to this context window size; 0 disables the override."
+  },
+  "analyze_routing": {
+    "gate_health_warn_pct": 10.0,
+    "escalation_window": 4,
+    "over_route_token_threshold": 200,
+    "over_route_session_token_cap": 1000,
+    "undispatched_tool_threshold": 12,
+    "escalation_nudge_threshold": 2,
+    "repeat_read_nudge_threshold": 3,
+    "undispatched_nudge_threshold": 1,
+    "session_cadence_threshold": 15,
+    "nudge_cooldown_hours": 2,
+    "dispatch_budget_nudge_pct": 70.0,
+    "pricing_per_1k": {
+      "_comment": "MVP-1: these two flat output-only prices exist only for the 'estimated savings if re-routed to fast tier' display in analyze_routing.py's over-route report. They intentionally mirror scripts/pricing.json's sonnet/haiku output_per_1k so the two files don't drift silently apart \u2014 the real, per-model, input+output cost math for /cost-report lives in scripts/pricing.json via price_for(), not here. If you edit pricing.json's sonnet or haiku output_per_1k, update these two to match.",
+      "reasoning_output": 0.015,
+      "fast_output": 0.004
+    },
+    "repeat_dispatch_token_threshold": 500,
+    "session_over_route_tool_call_cap": 5,
+    "session_over_route_min_cost_usd": 0.005,
+    "qa_full_file_read_threshold": 3,
+    "qa_low_tool_call_threshold": 3,
+    "shell_same_type_deny_warn_threshold": 20
+  },
+  "reward": {
+    "override_penalty": 0.5,
+    "escalation_penalty_cap": 0.8,
+    "escalation_penalty_multiplier": 0.2,
+    "error_penalty_cap": 0.3,
+    "error_penalty_multiplier": 0.1,
+    "revert_penalty_cap": 0.2,
+    "revert_penalty_multiplier": 0.1,
+    "clean_completion_bonus": 0.2,
+    "cost_penalty_cap": 0.5,
+    "cost_penalty_divisor_usd": 1.0,
+    "over_route_penalty_cap": 0.2,
+    "over_route_penalty_multiplier": 0.05
+  },
+  "classify_intent": {
+    "qa_with_reads_max_files": 2,
+    "qa_with_reads_max_lines": 100,
+    "qa_architecture_max_files": 3
+  },
+  "tune_savings": {
+    "rule_inject_fallback_usd": 0.02,
+    "rule_inject_evidence_multiplier": 0.05,
+    "explore_avg_tokens": 3000,
+    "_explore_sonnet_waste_usd_deprecated": "MVP-1: replaced by _model_utils.explore_sonnet_waste_usd(), which derives this live from pricing.json's sonnet output price * explore_avg_tokens above, instead of a hardcoded dollar figure that can go stale when pricing changes. Kept here as a comment, not read by any script.",
+    "session_summary_proposal_multiplier": 0.05
+  },
+  "logging": {
+    "max_usage_log_bytes": 8388608,
+    "usage_log_compact_trigger_bytes": 4194304,
+    "max_scenarios_per_key": 50,
+    "max_counterfactual_log_bytes": 2097152
+  },
+  "session_limits": {
+    "file_hash_guard": 50,
+    "agent_call_tracker": 50,
+    "inject_rule": 100,
+    "session_summary_projects": 100,
+    "agent_call_tracker_ttl_days": 14
+  },
+  "session_cost_budget": {
+    "budget_usd": 5.0,
+    "warning_pcts": [
+      50,
+      80
+    ],
+    "orchestrator_cost_per_turn": {
+      "reasoning": 0.25,
+      "sonnet": 0.05,
+      "fast": 0.01
+    }
+  },
+  "policy": {
+    "queued_threshold": 2,
+    "auto_apply_threshold": 10,
+    "max_table_rows": 80,
+    "auto_apply_enabled": false,
+    "dead_row_window": 50
+  },
+  "policy_gc": {
+    "near_duplicate_ratio": 0.7
+  },
+  "estimate_dispatch_context": {
+    "code_marker_ratio_threshold": 0.05
+  },
+  "runtime": {
+    "target_hash_hex_chars": 12,
+    "stdin_select_timeout_seconds": 0.5,
+    "tail_read_chunk_bytes": 8192
+  },
+  "graph": {
+    "ttl_days": 10,
+    "max_files": 5000,
+    "max_total_mb": 200,
+    "touch_interval_s": 300,
+    "gc_max_deletes_per_run": 5000,
+    "max_walk_depth": 12,
+    "extra_skip_dirs": []
+  },
+  "inline_mutation_gate": {
+    "nudge_threshold": 3,
+    "deny_threshold": 6
+  },
+  "shell_gate": {
+    "nudge_threshold": 2,
+    "deny_threshold": 5
+  },
+  "inline_narration_gate": {
+    "inline_narration_min_hits": 1
+  },
+  "impact": {
+    "session_summary": true,
+    "min_turns": 3,
+    "min_savings_usd": 0.1,
+    "cold_start_sessions": 3,
+    "auto_weekly": true
+  },
+  "feedback_loop": {
+    "promote_monitor_window": 20,
+    "regression_threshold": 0.2,
+    "improvement_threshold": 0.05,
+    "max_rules_per_week": 3,
+    "confidence_window": 50,
+    "confidence_threshold_low": 0.65,
+    "confidence_min_n_low": 3,
+    "confidence_threshold_medium": 0.8,
+    "confidence_min_n_medium": 5
+  },
+  "pipeline_trigger": {
+    "min_shadow_routes": 10,
+    "cooldown_min_new_routes": 5,
+    "gc_apply": false
+  },
+  "quality_signal": {
+    "window": 30
+  },
+  "claude_classifier": false,
+  "model_tiers": {
+    "_doc": "Per-host Task/Agent model IDs grouped by cost tier. haiku and composer-2.5-fast are the same fast tier on Claude Code vs Cursor. Gates resolve tier via tier_of_model(); these slugs appear in denial messages.",
+    "fast": {
+      "claude": "haiku",
+      "cursor": "composer-2.5-fast"
+    },
+    "reasoning": {
+      "claude": "sonnet",
+      "cursor": "claude-4.6-sonnet-medium-thinking"
+    },
+    "opus": {
+      "claude": "opus",
+      "cursor": null
+    }
+  }
+}

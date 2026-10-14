@@ -1,0 +1,13 @@
+[
+  {
+    "file_path": "utils.py",
+    "edit_type": "create",
+    "new_content": "import json\n\n\ndef read_config(path):\n    with open(path) as f:\n        return json.load(f)\n\n\ndef slugify(text):\n    return text.lower().replace(\" \", \"-\").replace(\"_\", \"-\")\n\n\ndef truncate(text, max_len=100):\n    if len(text) <= max_len:\n        return text\n    return text[:max_len - 3] + \"...\"\n"
+  },
+  {
+    "file_path": "main.py",
+    "edit_type": "str_replace",
+    "old_content": "import json\nimport os\n\n\ndef read_config(path):\n    with open(path) as f:\n        return json.load(f)\n\n\ndef slugify(text):\n    return text.lower().replace(\" \", \"-\").replace(\"_\", \"-\")\n\n\ndef truncate(text, max_len=100):\n    if len(text) <= max_len:\n        return text\n    return text[:max_len - 3] + \"...\"\n\n\ndef main():",
+    "new_content": "import json\nimport os\n\nfrom utils import read_config, slugify, truncate\n\n\ndef main():"
+  }
+]

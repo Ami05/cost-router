@@ -1,0 +1,1 @@
+{"hook_event_name":"PreToolUse","session_id":"test-session-shell-001","tool_name":"Bash","model":"claude-sonnet-4-6","tool_input":{"command":"pytest tests/ -x -q"}}

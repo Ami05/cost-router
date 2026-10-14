@@ -1,0 +1,8 @@
+[
+  {
+    "file_path": "service.py",
+    "edit_type": "str_replace",
+    "old_content": "def register_user(name, email, password):\n    if not name or len(name) < 2:\n        raise ValueError(\"invalid name\")\n\n    if not email or \"@\" not in email:\n        raise ValueError(\"invalid email\")\n    if not re.match(r\"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$\", email):\n        raise ValueError(\"invalid email format\")\n\n    if len(password) < 8:\n        raise ValueError(\"password too short\")\n\n    return {\"name\": name, \"email\": email}",
+    "new_content": "def validate_email(email):\n    if not email or \"@\" not in email:\n        raise ValueError(\"invalid email\")\n    if not re.match(r\"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$\", email):\n        raise ValueError(\"invalid email format\")\n\n\ndef register_user(name, email, password):\n    if not name or len(name) < 2:\n        raise ValueError(\"invalid name\")\n\n    validate_email(email)\n\n    if len(password) < 8:\n        raise ValueError(\"password too short\")\n\n    return {\"name\": name, \"email\": email}"
+  }
+]

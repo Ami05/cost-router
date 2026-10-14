@@ -1,0 +1,25 @@
+[
+  {
+    "file_path": "utils.py",
+    "edit_type": "create",
+    "new_content": "from datetime import datetime\n\n\ndef format_date(dt):\n    return dt.strftime(\"%Y-%m-%d %H:%M\")\n"
+  },
+  {
+    "file_path": "views.py",
+    "edit_type": "str_replace",
+    "old_content": "from datetime import datetime\n\n\ndef format_date(dt):\n    return dt.strftime(\"%Y-%m-%d %H:%M\")\n\n\ndef render_dashboard",
+    "new_content": "from datetime import datetime\n\nfrom utils import format_date\n\n\ndef render_dashboard"
+  },
+  {
+    "file_path": "reports.py",
+    "edit_type": "str_replace",
+    "old_content": "from views import format_date",
+    "new_content": "from utils import format_date"
+  },
+  {
+    "file_path": "api.py",
+    "edit_type": "str_replace",
+    "old_content": "from views import format_date",
+    "new_content": "from utils import format_date"
+  }
+]

@@ -1,0 +1,387 @@
+{
+    "mutation": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "MutationWorkerDispatch",
+        "type": "object",
+        "required": [
+            "worker",
+            "intent",
+            "files",
+            "pattern",
+            "output"
+        ],
+        "additionalProperties": false,
+        "properties": {
+            "worker": {
+                "const": "mutation",
+                "description": "Identifies this as a mutation worker dispatch. Also covers refactor (set preserve_behavior) and delete (pattern: 'remove X')."
+            },
+            "intent": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "One-phrase description of the task."
+            },
+            "files": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "type": "string",
+                    "pattern": "^.+:\\d+(,\\d+)?$",
+                    "description": "Format: path/to/file.py:line or path/to/file.py:start,end"
+                },
+                "description": "Files and line ranges the worker may mutate."
+            },
+            "pattern": {
+                "type": "string",
+                "maxLength": 200,
+                "description": "1-2 sentence description of the transformation to apply."
+            },
+            "constraints": {
+                "type": "array",
+                "maxItems": 5,
+                "items": {
+                    "type": "string",
+                    "maxLength": 60
+                },
+                "description": "Hard constraints the worker must not violate. Each word must appear in the closed vocabulary at config/constraint_allowlist.json (case-insensitive)."
+            },
+            "preserve_behavior": {
+                "type": "boolean",
+                "default": false,
+                "description": "When true, the mutation must preserve external behavior (refactor use case)."
+            },
+            "examples": {
+                "type": "array",
+                "maxItems": 3,
+                "items": {
+                    "type": "object",
+                    "required": [
+                        "before",
+                        "after"
+                    ],
+                    "additionalProperties": false,
+                    "properties": {
+                        "before": {
+                            "type": "string",
+                            "maxLength": 400,
+                            "description": "Code snippet showing the current state (plain string, no backticks)."
+                        },
+                        "after": {
+                            "type": "string",
+                            "maxLength": 400,
+                            "description": "Code snippet showing the desired state (plain string, no backticks)."
+                        }
+                    }
+                },
+                "description": "Optional before/after code snippets as plain strings (no fenced blocks). Raises mutation token ceiling to 500. Max 3 pairs, each field max 400 chars."
+            },
+            "where": {
+                "type": "string",
+                "maxLength": 80,
+                "description": "Human-readable location within the file (e.g. function name, block name)."
+            },
+            "why": {
+                "type": "string",
+                "maxLength": 150,
+                "description": "Intent and behavioral reasoning the worker needs for judgment calls. Separate from pattern (transformation instruction only)."
+            },
+            "output": {
+                "type": "string",
+                "enum": [
+                    "targeted_edits",
+                    "diff",
+                    "summary"
+                ],
+                "description": "What the worker should produce."
+            }
+        }
+    },
+    "read": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "ReadWorkerDispatch",
+        "type": "object",
+        "required": [
+            "worker",
+            "goal",
+            "scope",
+            "return"
+        ],
+        "additionalProperties": false,
+        "properties": {
+            "worker": {
+                "const": "read",
+                "description": "Identifies this as a read worker dispatch. Also covers review, analyze, validate, and debug via intent/return shaping."
+            },
+            "goal": {
+                "type": "string",
+                "maxLength": 150,
+                "description": "What to find or understand."
+            },
+            "scope": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "type": "string"
+                },
+                "description": "Directory or file paths to search within."
+            },
+            "return": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                    "type": "string"
+                },
+                "description": "What to extract and return (e.g. function signatures, file:line references)."
+            },
+            "max_files": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 50,
+                "default": 10,
+                "description": "Maximum number of files the worker may open."
+            }
+        }
+    },
+    "create": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "CreateWorkerDispatch",
+        "type": "object",
+        "required": [
+            "worker",
+            "intent",
+            "file_path"
+        ],
+        "additionalProperties": false,
+        "properties": {
+            "worker": {
+                "const": "create",
+                "description": "Identifies this as a create worker dispatch. Also covers generate (tests, docs, schemas, mocks)."
+            },
+            "intent": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "One-phrase description of what to create."
+            },
+            "file_path": {
+                "type": "string",
+                "description": "Path where the new file should be created."
+            },
+            "template_ref": {
+                "type": "string",
+                "description": "Optional path to an existing file to use as format reference."
+            },
+            "fields": {
+                "type": "object",
+                "description": "Key-value data to populate in the created file."
+            },
+            "constraints": {
+                "type": "array",
+                "maxItems": 5,
+                "items": {
+                    "type": "string",
+                    "maxLength": 60
+                },
+                "description": "Hard constraints the worker must not violate. Each word must appear in the closed vocabulary at config/constraint_allowlist.json (case-insensitive)."
+            }
+        }
+    },
+    "shell": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "title": "ShellWorkerDispatch",
+        "type": "object",
+        "required": [
+            "worker",
+            "intent",
+            "command",
+            "expect"
+        ],
+        "additionalProperties": false,
+        "properties": {
+            "worker": {
+                "const": "shell",
+                "description": "Identifies this as a shell worker dispatch. Also covers test (command: 'pytest ...') and execute."
+            },
+            "intent": {
+                "type": "string",
+                "maxLength": 100,
+                "description": "One-phrase description of what the command does."
+            },
+            "command": {
+                "type": "string",
+                "maxLength": 300,
+                "description": "The shell command to run."
+            },
+            "expect": {
+                "type": "string",
+                "enum": [
+                    "exit_code",
+                    "stdout",
+                    "stderr",
+                    "all"
+                ],
+                "description": "What output to capture and return."
+            },
+            "constraints": {
+                "type": "array",
+                "maxItems": 5,
+                "items": {
+                    "type": "string",
+                    "maxLength": 60
+                },
+                "description": "Hard constraints the worker must not violate. Each word must appear in the closed vocabulary at config/constraint_allowlist.json (case-insensitive)."
+            }
+        }
+    },
+    "examples": {
+        "mutation": {
+            "worker": "mutation",
+            "intent": "Add bounds check before list index access in process_batch",
+            "files": [
+                "scripts/gates.py:97,120"
+            ],
+            "pattern": "Insert an early return with a logged warning when the input list is empty, before the existing index access on line 103.",
+            "constraints": [
+                "Do not change the function signature",
+                "Do not remove existing log statements",
+                "Keep changes inside the function body only"
+            ],
+            "output": "targeted_edits"
+        },
+        "read": {
+            "worker": "read",
+            "goal": "Find all call sites of enforce_role_gates and their return value handling",
+            "scope": [
+                "scripts/",
+                "tests/e2e/"
+            ],
+            "return": [
+                "function signatures",
+                "file:line references",
+                "return value usage patterns"
+            ],
+            "max_files": 15
+        },
+        "create": {
+            "worker": "create",
+            "intent": "Create ticket for rewiring classify_intent hook",
+            "file_path": "knowledge/plans/rewire-classify-intent-ticket.json",
+            "template_ref": "knowledge/plans/enrich-routing-events-tickets.json",
+            "fields": {
+                "id": "REWIRE-001",
+                "title": "Re-wire classify_intent.py",
+                "priority": "P2",
+                "status": "backlog"
+            }
+        },
+        "shell": {
+            "worker": "shell",
+            "intent": "Run routing gate e2e tests",
+            "command": "python -m pytest tests/e2e/test_routing_gate.py -x -q",
+            "expect": "exit_code"
+        }
+    },
+    "gate_templates": {
+        "mutation": "{\"worker\":\"mutation\",\"intent\":\"<one-phrase task>\",\"files\":[\"path/to/file.py:line_or_range\"],\"where\":\"<function or block name>\",\"pattern\":\"<1-2 sentence transformation description>\",\"why\":\"<intent and behavioral reasoning>\",\"examples\":[{\"before\":\"<current code snippet>\",\"after\":\"<desired code snippet>\"}],\"constraints\":[\"<hard constraint>\"],\"output\":\"targeted_edits\"}",
+        "read": "{\"worker\":\"read\",\"goal\":\"<what to find or understand>\",\"scope\":[\"path/to/search/\"],\"return\":[\"function signatures\",\"file:line references\"],\"max_files\":10}",
+        "create": "{\"worker\":\"create\",\"intent\":\"<what to create>\",\"file_path\":\"<path/to/new/file>\",\"template_ref\":\"<optional: path to format reference>\",\"fields\":{\"<key>\":\"<value>\"}}",
+        "shell": "{\"worker\":\"shell\",\"intent\":\"<what the command does>\",\"command\":\"<shell command to run>\",\"expect\":\"exit_code|stdout|stderr|all\"}",
+        "orchestrator": "{\"worker\":\"orchestrator\",\"intent\":\"<one-phrase overall goal>\",\"step\":\"<single-phase description of implementation work. max_phases_per_dispatch: 1.>\",\"model\":\"sonnet\"}"
+    },
+    "response_schemas": {
+        "shell": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "ShellWorkerResponse",
+            "type": "object",
+            "required": ["exit_code", "stdout", "stderr"],
+            "properties": {
+                "exit_code": {"type": "integer"},
+                "stdout": {"type": "string"},
+                "stderr": {"type": "string"}
+            }
+        },
+        "read": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "ReadWorkerResponse",
+            "type": "object",
+            "required": ["findings"],
+            "properties": {
+                "findings": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": ["file", "line", "summary"],
+                        "properties": {
+                            "file": {"type": "string"},
+                            "line": {"type": "integer"},
+                            "summary": {"type": "string"}
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "response_schemas": {
+        "shell": {
+            "type": "object",
+            "properties": {
+                "exit_code": {"type": "integer"},
+                "stdout": {"type": "string"},
+                "stderr": {"type": "string"}
+            },
+            "required": ["exit_code", "stdout", "stderr"]
+        },
+        "read": {
+            "type": "object",
+            "properties": {
+                "findings": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "file": {"type": "string"},
+                            "line": {"type": "integer"},
+                            "summary": {"type": "string"}
+                        },
+                        "required": ["file", "line", "summary"]
+                    }
+                }
+            },
+            "required": ["findings"]
+        }
+    },
+    "orchestrator": {
+        "title": "OrchestratorDispatch",
+        "description": "Single-phase FO dispatch. The receiving agent executes a focused work unit.",
+        "required": [
+            "worker",
+            "intent",
+            "step"
+        ],
+        "properties": {
+            "worker": {
+                "const": "orchestrator"
+            },
+            "intent": {
+                "type": "string",
+                "description": "One-phrase overall goal",
+                "maxLength": 120
+            },
+            "step": {
+                "type": "string",
+                "description": "Single-phase description of implementation work. max_phases_per_dispatch: 1.",
+                "maxLength": 1600
+            },
+            "model": {
+                "type": "string",
+                "default": "sonnet"
+            },
+            "constraints": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "maxItems": 5
+            }
+        }
+    }
+}

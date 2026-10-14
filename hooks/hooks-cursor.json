@@ -1,0 +1,181 @@
+{
+  "version": 1,
+  "_meta": {
+    "cost_router_plugin": "~/.cursor/plugins/local/cost-router",
+    "notes": "Managed from cost-router-v4/hooks/hooks-cursor.json (dev workspace = source of truth). Deploy via resync/resync.sh which expands ${CURSOR_PLUGIN_ROOT} and ${CURSOR_USER_HOOKS} placeholders into ~/.cursor/hooks.json. Do NOT edit ~/.cursor/hooks.json directly. User-level hooks so cost-router (model-router + cost tracking + tune-routing) auto-applies to every codebase. workspaceOpen/sessionStart register the installed plugin path for skills/rules/commands. Full parity with live ~/.cursor/hooks.json (PROD-31A). Gate re-enabled PROD-31-FOLLOWUP 2026-08-07 (PROD-2/PROD-3 validated 2026-08-03)."
+  },
+  "hooks": {
+    "workspaceOpen": [
+      {
+        "command": "bash \"${CURSOR_USER_HOOKS}/register-global-cost-router.sh\""
+      }
+    ],
+    "sessionStart": [
+      {
+        "command": "bash \"${CURSOR_USER_HOOKS}/register-global-cost-router.sh\""
+      }
+    ],
+    "beforeSubmitPrompt": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" estimate_tokens.py --event prompt",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_routing.py --event reset",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" compact_log.py --checkpoint",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" classify_intent.py",
+        "timeout": 5,
+        "_note": "Keyword heuristic classifier; prompt-hook approach abandoned (multi-turn context caused non-JSON output)"
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" detect_resume.py",
+        "timeout": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" estimate_tokens.py --event tool",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_routing.py --event scan",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" mark_graph_stale.py",
+        "matcher": "Write|StrReplace|Edit",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" file_hash_guard.py --event post_edit",
+        "matcher": "Write|StrReplace|Edit",
+        "timeout": 5
+      }
+    ],
+    "beforeReadFile": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" estimate_tokens.py --event read_file",
+        "timeout": 5,
+        "matcher": "read_file"
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_read_repeat.py",
+        "timeout": 5,
+        "matcher": "read_file"
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" build_file_graph.py",
+        "timeout": 8,
+        "matcher": "read_file"
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_routing.py --event read",
+        "timeout": 5,
+        "matcher": "read_file"
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" file_hash_guard.py --event read",
+        "timeout": 8,
+        "matcher": "read_file"
+      }
+    ],
+    "preToolUse": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_routing.py --event gate",
+        "matcher": "Write|StrReplace|Edit|Shell|Task|Delete",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" file_hash_guard.py --event pre_edit",
+        "matcher": "Write|StrReplace|Edit",
+        "timeout": 8
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" agent_call_tracker.py",
+        "matcher": "Agent|Task",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" gates.py --gate pre_task",
+        "matcher": "Agent|Task",
+        "async": false
+      }
+    ],
+    "afterAgentResponse": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" estimate_tokens.py --event response",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_routing.py --event scan",
+        "timeout": 5
+      }
+    ],
+    "afterAgentThought": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_routing.py --event scan",
+        "timeout": 5
+      }
+    ],
+    "subagentStart": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_routing.py --event subagent_start",
+        "timeout": 5
+      }
+    ],
+    "subagentStop": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" check_routing.py --event subagent_stop",
+        "timeout": 5
+      }
+    ],
+    "stop": [
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" reward_signal.py",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" shadow_log.py",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" confidence_score.py",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" session_hook.py",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" graph_gc.py",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" compact_log.py",
+        "timeout": 5
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" file_graph_refresh.py",
+        "timeout": 30
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" session_impact.py",
+        "timeout": 10
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" graph_update.py",
+        "timeout": 60
+      },
+      {
+        "command": "bash \"${CURSOR_PLUGIN_ROOT}/hooks/run.sh\" pipeline_trigger.py",
+        "timeout": 120
+      }
+    ]
+  }
+}

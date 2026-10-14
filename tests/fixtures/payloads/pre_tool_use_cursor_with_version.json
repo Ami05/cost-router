@@ -1,0 +1,1 @@
+{"hook_event_name":"PreToolUse","session_id":"test-session-cursor-002","tool_name":"Edit","model":"claude-opus-4-1","cursor_version":"0.42.0","tool_input":{"file_path":"src/main.py","old_string":"def foo()","new_string":"def foo_updated()"}}

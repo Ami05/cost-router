@@ -1,0 +1,2088 @@
+{
+  "_doc": "Real-user eval corpus. 350 diverse prompts across 7 intent classes. Pre-generated and committed — no ANTHROPIC_API_KEY required at runtime. Format: [{intent, prompt, type, notes}].",
+  "meta": {
+    "version": "1.0.0",
+    "total": 342,
+    "classes": [
+      "agentic_action",
+      "analytical_qa",
+      "content_generation",
+      "dispatch_justification",
+      "inline_narration",
+      "qa_architecture",
+      "qa_simple",
+      "qa_with_reads"
+    ],
+    "types": [
+      "canonical",
+      "informal_typos",
+      "mid_task_shorthand",
+      "implicit_context",
+      "boundary"
+    ],
+    "prompts_per_class": {
+      "agentic_action": 46,
+      "analytical_qa": 14,
+      "content_generation": 46,
+      "dispatch_justification": 51,
+      "inline_narration": 50,
+      "qa_architecture": 45,
+      "qa_simple": 45,
+      "qa_with_reads": 45
+    }
+  },
+  "prompts": [
+    {
+      "intent": "dispatch_justification",
+      "prompt": "I'm going to dispatch this to a subagent because it involves editing 12 files across three modules.",
+      "type": "canonical",
+      "notes": "explicit dispatch signal with reasoning"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Spinning up a Task() worker for the migration — too many files for inline work.",
+      "type": "canonical",
+      "notes": "Task() signal + dispatch reasoning"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Delegating this to a haiku worker since it's purely mechanical file renaming.",
+      "type": "canonical",
+      "notes": "delegate + worker model mention"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "I'll farm out the test generation to a subagent — FO routing applies here.",
+      "type": "canonical",
+      "notes": "farm out + FO routing reference"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Routing: FO — dispatching a sonnet worker to handle the architecture review.",
+      "type": "canonical",
+      "notes": "routing label + dispatch"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Handing off the bulk delete to a separate agent so it doesn't block this thread.",
+      "type": "canonical",
+      "notes": "hand off + separate agent"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "kick off a task for the linting pass — all 40 files need the same fix",
+      "type": "canonical",
+      "notes": "kick off bigram"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "spin up a worker to run the eval suite in the background",
+      "type": "canonical",
+      "notes": "spin up bigram"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "dispatching to a haiku subagent for the mechanical part",
+      "type": "canonical",
+      "notes": "dispatching + subagent"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "send to worker: run pytest tests/e2e/ -x -q and report back",
+      "type": "canonical",
+      "notes": "send to worker bigram"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "dispatching this cuz its gonna take a while lol",
+      "type": "informal_typos",
+      "notes": "informal spelling, dispatch signal"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "gonna spinn up a task for the big refactor",
+      "type": "informal_typos",
+      "notes": "typo in spin, agentic context"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "delegatin this to subagent bc too many files",
+      "type": "informal_typos",
+      "notes": "delegating typo, subagent signal"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "routing this 2 a worker — its a big batch edit",
+      "type": "informal_typos",
+      "notes": "route this signal with number substitution"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "farm out to an agnet for the boring stuff",
+      "type": "informal_typos",
+      "notes": "farm out + agent typo"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Task() — model: haiku",
+      "type": "mid_task_shorthand",
+      "notes": "pure shorthand dispatch notation"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "FO dispatch — mechanical edit across scripts/",
+      "type": "mid_task_shorthand",
+      "notes": "routing prefix shorthand"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "subagent: delete all .pyc files under tests/",
+      "type": "mid_task_shorthand",
+      "notes": "subagent shorthand"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "worker for lint — 30 files, same pattern",
+      "type": "mid_task_shorthand",
+      "notes": "worker shorthand"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "offload to haiku: run tests",
+      "type": "mid_task_shorthand",
+      "notes": "offload signal"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "This bulk rename job needs a separate agent because we have the full file list.",
+      "type": "implicit_context",
+      "notes": "separate agent + implicit batch justification"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Given how many modules are involved, I'm going to delegate rather than edit inline.",
+      "type": "implicit_context",
+      "notes": "delegate + inline contrast"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "The parallelism here means I should spin up multiple workers rather than do it sequentially.",
+      "type": "implicit_context",
+      "notes": "parallel + spin up"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Since this is mechanical similarity flagged, I'll route this to a haiku agent.",
+      "type": "implicit_context",
+      "notes": "route this + mechanical context"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Because these 50 files all need the same change, I'll kick off a batch worker.",
+      "type": "implicit_context",
+      "notes": "kick off + implicit batch size"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "I need to dispatch this — it's mostly file reads followed by targeted edits.",
+      "type": "boundary",
+      "notes": "dispatch + reads + edits mix, boundary with agentic"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Task for the worker: generate a changelog and commit it.",
+      "type": "boundary",
+      "notes": "task for worker + content gen boundary"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "delegate the architecture review — I want a second opinion from a reasoning agent",
+      "type": "boundary",
+      "notes": "delegate + architecture review boundary"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "subagent for this — it's technically agentic but the scope is too large to inline",
+      "type": "boundary",
+      "notes": "subagent + explicit inline contrast"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Dispatching to worker. Do NOT dispatch this to qa — it's an edit task.",
+      "type": "boundary",
+      "notes": "dispatch + negation clause, tests primary clause extraction"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "route to a sonnet worker for the design doc phase",
+      "type": "canonical",
+      "notes": "route to bigram"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "delegate the analysis to a background agent",
+      "type": "canonical",
+      "notes": "delegate + background booster"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "pass to a parallel haiku worker for the file scan",
+      "type": "canonical",
+      "notes": "pass to a bigram + parallel booster"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "orchestrate three workers: one for reads, one for edits, one for verify",
+      "type": "canonical",
+      "notes": "orchestrate signal"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "batch this work out to separate agents — each handles one module",
+      "type": "canonical",
+      "notes": "batch + separate agent"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "I'll offload the doc generation to a content worker",
+      "type": "canonical",
+      "notes": "offload + worker"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "task for the test runner: pytest tests/e2e -x",
+      "type": "canonical",
+      "notes": "task for the signal"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "subagent for the bulk edit — model haiku is sufficient",
+      "type": "canonical",
+      "notes": "subagent + model specification"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "spin up a task — the mutation scope spans 8 files",
+      "type": "canonical",
+      "notes": "spin up + scope reasoning"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "worker for this: it's a pure mechanical rename",
+      "type": "canonical",
+      "notes": "worker + mechanical qualifier"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "kicking off a task bc too big to inline lol",
+      "type": "informal_typos",
+      "notes": "informal + bc abbreviation"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "spining up sub agent for the big merge",
+      "type": "informal_typos",
+      "notes": "spinning typo + sub agent spacing"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "delegatig to a worker rn",
+      "type": "informal_typos",
+      "notes": "delegating typo + rn abbreviation"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "dispatch — haiku — tests",
+      "type": "mid_task_shorthand",
+      "notes": "ultra-minimal dispatch notation"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "→ subagent (haiku): clean up imports across src/",
+      "type": "mid_task_shorthand",
+      "notes": "arrow notation shorthand"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "The read-modify-commit cycle here justifies a separate worker with Bash access.",
+      "type": "implicit_context",
+      "notes": "separate worker + Bash access implicit justification"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Complexity of this multi-file refactor pushes it past inline threshold — delegating.",
+      "type": "implicit_context",
+      "notes": "delegate + complexity reasoning"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "dispatch this, then when done dispatch a verify shell worker",
+      "type": "implicit_context",
+      "notes": "sequential dispatch pattern"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "This is a FO situation — the scope is larger than what I should do inline.",
+      "type": "boundary",
+      "notes": "FO reference + inline contrast"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "Task() call incoming — do not interpret this as a code edit request.",
+      "type": "boundary",
+      "notes": "Task() + negation, tests primary clause extraction"
+    },
+    {
+      "intent": "dispatch_justification",
+      "prompt": "subagent for this chunk, also then read the output when done",
+      "type": "boundary",
+      "notes": "subagent + trailing also clause"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'm editing the file now to fix the off-by-one in the loop.",
+      "type": "canonical",
+      "notes": "editing the file now signal"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Doing this myself — no dispatch needed for a single-file fix.",
+      "type": "canonical",
+      "notes": "doing this myself + no dispatch"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'll handle this directly. Reading the config file now.",
+      "type": "canonical",
+      "notes": "i'll handle + directly signals"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Routing: DIRECT — patching the import inline.",
+      "type": "canonical",
+      "notes": "routing: direct explicit label"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Working on it here — no need to dispatch this small change.",
+      "type": "canonical",
+      "notes": "working on it + no need to dispatch"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'm reading the gate file to locate the offending line.",
+      "type": "canonical",
+      "notes": "i'm reading signal"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Fixing this now — the issue is in the normalize_canonical function.",
+      "type": "canonical",
+      "notes": "fixing this now signal"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'll fix it in place — it's a one-liner change.",
+      "type": "canonical",
+      "notes": "fixing it in place bigram"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Tackling this myself since it's straightforward.",
+      "type": "canonical",
+      "notes": "tackling this myself signal"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I am handling the config update now, not delegating.",
+      "type": "canonical",
+      "notes": "i am handling + now booster"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "editing this now bc its a 1 liner fix lol",
+      "type": "informal_typos",
+      "notes": "editing now + informal"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "doin it myself, no worker needed",
+      "type": "informal_typos",
+      "notes": "doing it myself typo"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "fixn this inline rn",
+      "type": "informal_typos",
+      "notes": "fixing typo + rn"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "im handlin this directy, small change",
+      "type": "informal_typos",
+      "notes": "handling typo + directly typo"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "tackling this myself dont need an agent",
+      "type": "informal_typos",
+      "notes": "tackling myself + no agent"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Routing: DIRECT — small fix",
+      "type": "mid_task_shorthand",
+      "notes": "routing direct shorthand"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "inline edit — one file",
+      "type": "mid_task_shorthand",
+      "notes": "inline shorthand"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "doing it here",
+      "type": "mid_task_shorthand",
+      "notes": "minimal doing it here"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "reading then patching",
+      "type": "mid_task_shorthand",
+      "notes": "ultra-minimal narration"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "fixing in place",
+      "type": "mid_task_shorthand",
+      "notes": "minimal fixing in place"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "The fix is simple enough that I'll just do it here rather than spin up an agent.",
+      "type": "implicit_context",
+      "notes": "do it here + rather than agent contrast"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Since there's only one file affected, I'm handling this directly.",
+      "type": "implicit_context",
+      "notes": "handling directly + implicit scope"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "This is a trivial rename — I'll do it inline instead of dispatching.",
+      "type": "implicit_context",
+      "notes": "inline + instead of dispatching"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "No subagent required here — editing the offending line now.",
+      "type": "implicit_context",
+      "notes": "no subagent + editing now"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I can see the bug, I'll fix it here without delegating.",
+      "type": "implicit_context",
+      "notes": "fix here + without delegating"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'm fixing this now, also please note the other open issue.",
+      "type": "boundary",
+      "notes": "fixing now + trailing also clause"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Editing this directly. Do not dispatch this to a worker.",
+      "type": "boundary",
+      "notes": "editing directly + negation clause"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'm reading through the codebase to understand the flow.",
+      "type": "boundary",
+      "notes": "i'm reading + architecture boundary"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Handling this inline — it's agentic work but single-file scope.",
+      "type": "boundary",
+      "notes": "inline + agentic boundary"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Doing this inline. Also generate a changelog when done.",
+      "type": "boundary",
+      "notes": "inline + content gen boundary"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'll handle the edit now — already read the file.",
+      "type": "canonical",
+      "notes": "i'll handle + now booster"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Correcting the off-by-one directly in the source.",
+      "type": "canonical",
+      "notes": "correcting the bigram"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Adjusting the threshold value here inline.",
+      "type": "canonical",
+      "notes": "adjusting the bigram + inline"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Looking at the implementation now to verify the logic.",
+      "type": "canonical",
+      "notes": "looking at the bigram + now booster"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "No dispatch — I'm editing in place.",
+      "type": "canonical",
+      "notes": "no dispatch + editing in place"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "updating the file directly here",
+      "type": "canonical",
+      "notes": "updating the file bigram + directly"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "patching the bug right now",
+      "type": "canonical",
+      "notes": "patching the bigram + right now booster"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'll do this inline — it's a minor config change.",
+      "type": "canonical",
+      "notes": "i'll do this + inline"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Handling the narration here, no worker needed.",
+      "type": "canonical",
+      "notes": "handling the bigram"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "fixng inline rn no need 4 agent",
+      "type": "informal_typos",
+      "notes": "multiple typos + abbreviations"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "im doing it here now",
+      "type": "informal_typos",
+      "notes": "doing it here + informal"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "tackilng this directly",
+      "type": "informal_typos",
+      "notes": "tackling typo"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "no dispatch, edit now",
+      "type": "mid_task_shorthand",
+      "notes": "no dispatch shorthand"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Routing: DIRECT",
+      "type": "mid_task_shorthand",
+      "notes": "single-line routing label"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Given it's a one-liner, no reason to spin up a subagent.",
+      "type": "implicit_context",
+      "notes": "no reason to + subagent contrast"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "The scope is small so I'll just handle this myself right now.",
+      "type": "implicit_context",
+      "notes": "myself + right now booster"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'm reading and editing this file in one pass — inline.",
+      "type": "implicit_context",
+      "notes": "reading + editing + inline"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Doing this inline, but also note we may need a bigger refactor later.",
+      "type": "boundary",
+      "notes": "inline + future work trailing clause"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "I'll fix this now. Don't dispatch anything.",
+      "type": "boundary",
+      "notes": "fix now + negation of dispatch"
+    },
+    {
+      "intent": "inline_narration",
+      "prompt": "Editing directly. Also, what's the architecture here?",
+      "type": "boundary",
+      "notes": "editing directly + qa_architecture boundary question"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Generate a changelog for the last three commits.",
+      "type": "canonical",
+      "notes": "generate + changelog bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Put together a README describing what this module is for.",
+      "type": "canonical",
+      "notes": "write a + readme signal (reworded in T2: near-dup of an exemplar)"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Create a boilerplate Python module with the standard header.",
+      "type": "canonical",
+      "notes": "create a + boilerplate signal"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Draft a design doc for the new routing gate feature.",
+      "type": "canonical",
+      "notes": "draft a + design doc bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Produce a Markdown file summarizing the eval results.",
+      "type": "canonical",
+      "notes": "produce a + markdown file signal"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Build a skeleton for the new test harness.",
+      "type": "canonical",
+      "notes": "build a + skeleton signal"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Scaffold a new FastAPI service with standard structure.",
+      "type": "canonical",
+      "notes": "scaffold signal"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Compose a spec document for the dispatch protocol changes.",
+      "type": "canonical",
+      "notes": "compose a + spec document"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Write documentation for the classify_intent function.",
+      "type": "canonical",
+      "notes": "write documentation bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Generate an HTML page showing the routing summary.",
+      "type": "canonical",
+      "notes": "generate + html page signal"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "wrtie me a readme for this thing",
+      "type": "informal_typos",
+      "notes": "write typo + readme"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "genrate a changelog pls",
+      "type": "informal_typos",
+      "notes": "generate typo"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "make a templete for the new test file",
+      "type": "informal_typos",
+      "notes": "template typo + make a"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "draft me some docs 4 the gate hooks",
+      "type": "informal_typos",
+      "notes": "draft + number substitution"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "scafflod the new module pls",
+      "type": "informal_typos",
+      "notes": "scaffold typo"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "changelog — last 5 commits",
+      "type": "mid_task_shorthand",
+      "notes": "changelog shorthand"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "generate: design doc, routing gate",
+      "type": "mid_task_shorthand",
+      "notes": "generate shorthand"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "README for this module",
+      "type": "mid_task_shorthand",
+      "notes": "minimal README request"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "boilerplate: new Python script with argparse",
+      "type": "mid_task_shorthand",
+      "notes": "boilerplate shorthand"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "template: pytest conftest for eval",
+      "type": "mid_task_shorthand",
+      "notes": "template shorthand"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Now that the feature is done, we need proper documentation for it.",
+      "type": "implicit_context",
+      "notes": "documentation signal + implicit feature complete"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Before we ship, generate the release notes.",
+      "type": "implicit_context",
+      "notes": "generate + implicit pre-release context"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "The new API needs a spec doc — please write one.",
+      "type": "implicit_context",
+      "notes": "write + spec doc implicit trigger"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "We're onboarding new devs — draft the setup guide.",
+      "type": "implicit_context",
+      "notes": "draft + implicit onboarding context"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "The module is undocumented — scaffold the docstring template.",
+      "type": "implicit_context",
+      "notes": "scaffold + implicit undocumented state"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Write a changelog, also fix the import error on line 12.",
+      "type": "boundary",
+      "notes": "write a + trailing agentic clause"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Generate a README. Do not read the source files — just use the existing docs.",
+      "type": "boundary",
+      "notes": "generate + negation of reads"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Draft a design doc for this, and then we'll dispatch the implementation.",
+      "type": "boundary",
+      "notes": "draft + dispatch boundary"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Produce a summary of the architecture for the README.",
+      "type": "boundary",
+      "notes": "produce + architecture boundary"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Write docs for the new feature — inline, no worker needed.",
+      "type": "boundary",
+      "notes": "write docs + inline narration boundary"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "make a new html file for the dashboard",
+      "type": "canonical",
+      "notes": "make a + html file signal"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "write up the release notes",
+      "type": "canonical",
+      "notes": "write up bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "create the onboarding doc",
+      "type": "canonical",
+      "notes": "create the bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "draft the migration guide",
+      "type": "canonical",
+      "notes": "draft the bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "generate the API reference doc",
+      "type": "canonical",
+      "notes": "generate the bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "write the contribution guidelines",
+      "type": "canonical",
+      "notes": "write the bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Create a template config file with all defaults.",
+      "type": "canonical",
+      "notes": "create a + template"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Build a boilerplate hook script for new gates.",
+      "type": "canonical",
+      "notes": "build a + boilerplate"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Produce a markdown summary of all intent classes.",
+      "type": "canonical",
+      "notes": "produce a + markdown file"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "writ up the api docs",
+      "type": "informal_typos",
+      "notes": "write typo + write up bigram"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "genrate a readme file pls",
+      "type": "informal_typos",
+      "notes": "generate typo + readme"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "docs — routing module",
+      "type": "mid_task_shorthand",
+      "notes": "documentation shorthand"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "scaffold: new eval module",
+      "type": "mid_task_shorthand",
+      "notes": "scaffold shorthand"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Given this is going to production, we need a runbook.",
+      "type": "implicit_context",
+      "notes": "implicit production + documentation need"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "Write a spec doc for this. Don't run any tests yet.",
+      "type": "boundary",
+      "notes": "write + negation of agentic"
+    },
+    {
+      "intent": "content_generation",
+      "prompt": "draft a doc, also what does the router do exactly",
+      "type": "boundary",
+      "notes": "draft + trailing qa_simple boundary"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Fix the bug in the normalize function.",
+      "type": "canonical",
+      "notes": "fix agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Add the missing import to classify_intent.py.",
+      "type": "canonical",
+      "notes": "add agentic verb + file reference"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Delete all .pyc files from the tests directory.",
+      "type": "canonical",
+      "notes": "delete agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Refactor the scoring logic to use a helper function.",
+      "type": "canonical",
+      "notes": "refactor agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Update the config to increase the concurrency limit to 5.",
+      "type": "canonical",
+      "notes": "update agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Rename the function from score_text to score_intent.",
+      "type": "canonical",
+      "notes": "rename agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Remove the deprecated fallback path from the classifier.",
+      "type": "canonical",
+      "notes": "remove agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Implement the new tie-breaking algorithm.",
+      "type": "canonical",
+      "notes": "implement agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Deploy the updated gate script to ~/.claude.",
+      "type": "canonical",
+      "notes": "deploy agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Migrate the old threshold config to the new format.",
+      "type": "canonical",
+      "notes": "migrate agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "pls fix the bug in the score func",
+      "type": "informal_typos",
+      "notes": "fix + informal pls"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "add the missin import stat pls",
+      "type": "informal_typos",
+      "notes": "add + missing typo"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "delet the old test files",
+      "type": "informal_typos",
+      "notes": "delete typo"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "refactr the normalization",
+      "type": "informal_typos",
+      "notes": "refactor typo"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "updat the config plz",
+      "type": "informal_typos",
+      "notes": "update typo"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "fix: normalize_canonical off-by-one",
+      "type": "mid_task_shorthand",
+      "notes": "fix shorthand with function name"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "add: missing return type hints to classify_intent.py",
+      "type": "mid_task_shorthand",
+      "notes": "add shorthand"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "delete: all __pycache__ dirs",
+      "type": "mid_task_shorthand",
+      "notes": "delete shorthand"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "rename: score_text → score_intent",
+      "type": "mid_task_shorthand",
+      "notes": "rename shorthand with arrow"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "implement: T020 primary clause extraction",
+      "type": "mid_task_shorthand",
+      "notes": "implement shorthand with ticket ref"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "The test is failing because of the missing check — fix it.",
+      "type": "implicit_context",
+      "notes": "fix + implicit failing test context"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "The config format changed in v2 — update all references.",
+      "type": "implicit_context",
+      "notes": "update + implicit migration context"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "The function name is misleading — rename it to something clearer.",
+      "type": "implicit_context",
+      "notes": "rename + implicit clarity context"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "We have dead code in that module — remove it.",
+      "type": "implicit_context",
+      "notes": "remove + implicit dead code context"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "The dependency is outdated — migrate to the newer API.",
+      "type": "implicit_context",
+      "notes": "migrate + implicit version context"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Fix the import error, also tell me what caused it.",
+      "type": "boundary",
+      "notes": "fix + trailing qa clause"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Add the new field to the schema. Do not dispatch this.",
+      "type": "boundary",
+      "notes": "add + negation of dispatch"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Implement the feature inline — no subagent.",
+      "type": "boundary",
+      "notes": "implement + inline narration boundary"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Run the tests to verify the fix works.",
+      "type": "boundary",
+      "notes": "run + verify context, agentic action"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Build the new indexing module and write tests for it.",
+      "type": "boundary",
+      "notes": "build + write compound agentic"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Create the new endpoint handler.",
+      "type": "canonical",
+      "notes": "create verb — note: tests suppression vs content_gen"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Edit the gate script to add the new rule.",
+      "type": "canonical",
+      "notes": "edit agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Write the missing test for the edge case.",
+      "type": "canonical",
+      "notes": "write agentic verb (no a/the prefix for content_gen distinction)"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Run the linter on all Python files.",
+      "type": "canonical",
+      "notes": "run agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Build and verify the new gate locally.",
+      "type": "canonical",
+      "notes": "build + verify compound"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Change the default timeout from 30s to 60s.",
+      "type": "canonical",
+      "notes": "change agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Remove the old migration scripts.",
+      "type": "canonical",
+      "notes": "remove agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Update all references to the old function name.",
+      "type": "canonical",
+      "notes": "update agentic verb"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "fixe the validation check",
+      "type": "informal_typos",
+      "notes": "fix typo"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "addd the new feild pls",
+      "type": "informal_typos",
+      "notes": "add + field typos"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "remov old config",
+      "type": "mid_task_shorthand",
+      "notes": "remove shorthand"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "update: max_inflight → 5",
+      "type": "mid_task_shorthand",
+      "notes": "update shorthand with arrow notation"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Given the bug report, apply the fix to prevent the crash.",
+      "type": "implicit_context",
+      "notes": "fix + implicit crash context"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "The PR feedback says to rename this — do it.",
+      "type": "implicit_context",
+      "notes": "rename + implicit PR review context"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Add a test for this edge case, but don't dispatch it.",
+      "type": "boundary",
+      "notes": "add + negation of dispatch"
+    },
+    {
+      "intent": "agentic_action",
+      "prompt": "Implement and document the new strategy.",
+      "type": "boundary",
+      "notes": "implement + document content_gen boundary"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How does the whole routing pipeline work from prompt to gate decision?",
+      "type": "canonical",
+      "notes": "how does the whole + pipeline signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Give me a high-level overview of the classification system.",
+      "type": "canonical",
+      "notes": "high level + overview signals"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Explain the flow from hook trigger to intent classification.",
+      "type": "canonical",
+      "notes": "explain the flow bigram"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "What is the overall architecture of the cost-router?",
+      "type": "canonical",
+      "notes": "overall architecture signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How does it all fit together — the gates, the classifier, the scorer?",
+      "type": "canonical",
+      "notes": "how does it all bigram"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Walk me through the end-to-end flow for a dispatch request.",
+      "type": "canonical",
+      "notes": "end-to-end signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Explain the architecture — from start to finish.",
+      "type": "canonical",
+      "notes": "from start to finish signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "What's the big picture of how routing decisions are made?",
+      "type": "canonical",
+      "notes": "big picture signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How does the entire system handle a new prompt?",
+      "type": "canonical",
+      "notes": "entire system signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How are all the files structured and how do they interact?",
+      "type": "canonical",
+      "notes": "all files + structure of signals"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "how does the whole thing work lol",
+      "type": "informal_typos",
+      "notes": "how does the whole signal + informal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "explan the architecure of this plz",
+      "type": "informal_typos",
+      "notes": "explain typo + architecture typo"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "big pic overview of the router?",
+      "type": "informal_typos",
+      "notes": "big picture abbreviated"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "how do all these peices fit 2gether",
+      "type": "informal_typos",
+      "notes": "how everything fits + typos + number"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "walk me thru the whole pipeline",
+      "type": "informal_typos",
+      "notes": "whole pipeline + thru abbreviation"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "overall flow — cost-router",
+      "type": "mid_task_shorthand",
+      "notes": "overall flow bigram shorthand"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "system design: classify_intent",
+      "type": "mid_task_shorthand",
+      "notes": "system design bigram shorthand"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "high-level overview: gate pipeline",
+      "type": "mid_task_shorthand",
+      "notes": "high-level overview bigram shorthand"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "architecture: routing matrix",
+      "type": "mid_task_shorthand",
+      "notes": "architecture shorthand"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "full flow: prompt → intent → routing",
+      "type": "mid_task_shorthand",
+      "notes": "full flow signal + arrow notation"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "I'm new to this codebase — can you explain how the pieces fit together?",
+      "type": "implicit_context",
+      "notes": "how everything fits + implicit onboarding"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Before making changes I want to understand the complete flow.",
+      "type": "implicit_context",
+      "notes": "complete flow + implicit pre-change context"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "We're debugging a routing failure — what's the end-to-end sequence?",
+      "type": "implicit_context",
+      "notes": "end-to-end + implicit debug context"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "For the code review, I need the overall architecture explained.",
+      "type": "implicit_context",
+      "notes": "overall architecture + implicit review context"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "To write proper tests, I need to understand the whole system.",
+      "type": "implicit_context",
+      "notes": "whole system + implicit test writing context"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How does the system work? And can you fix the bug in line 42?",
+      "type": "boundary",
+      "notes": "architecture + trailing agentic boundary"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Explain the architecture, also show me the specific config file.",
+      "type": "boundary",
+      "notes": "architecture + trailing read boundary"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How does the flow work at a high level? Keep it brief.",
+      "type": "boundary",
+      "notes": "high level + brevity qualifier"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "What's the overall design? Don't read any files — just explain from memory.",
+      "type": "boundary",
+      "notes": "overall + negation of reads"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Give me the architecture overview before we dispatch the refactor.",
+      "type": "boundary",
+      "notes": "overview + dispatch boundary"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How does the whole semantic scoring pipeline work?",
+      "type": "canonical",
+      "notes": "whole pipeline variant"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Describe the structure of the hooks system.",
+      "type": "canonical",
+      "notes": "structure of signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How does the complete flow from prompt to model selection work?",
+      "type": "canonical",
+      "notes": "complete flow signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How do these modules interact with each other?",
+      "type": "canonical",
+      "notes": "how do these signal"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Explain how the system design handles concurrent agents.",
+      "type": "canonical",
+      "notes": "system design bigram"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "What's the high level flow for the Bounded Wave Scheduler?",
+      "type": "canonical",
+      "notes": "high level + flow"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Walk me through the whole codebase structure.",
+      "type": "canonical",
+      "notes": "how does the whole variant"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Give an overview of how the routing matrix is used end-to-end.",
+      "type": "canonical",
+      "notes": "overview + end-to-end"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "how does it all work??",
+      "type": "informal_typos",
+      "notes": "how does it all + informal punctuation"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "explan the big picture of the gate system",
+      "type": "informal_typos",
+      "notes": "explain typo + big picture"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "arch overview pls",
+      "type": "mid_task_shorthand",
+      "notes": "architecture abbreviated"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "e2e flow: dispatch → verify",
+      "type": "mid_task_shorthand",
+      "notes": "end-to-end abbreviated + arrow"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Trying to understand how the classifier feeds into the gate — full picture please.",
+      "type": "implicit_context",
+      "notes": "implicit confusion + full picture"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "Architecture overview — don't dispatch anything, just explain.",
+      "type": "boundary",
+      "notes": "overview + negation of dispatch"
+    },
+    {
+      "intent": "qa_architecture",
+      "prompt": "How does the whole thing work, also what file is the entry point?",
+      "type": "boundary",
+      "notes": "whole thing + trailing read boundary"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Show me the classify_intent function.",
+      "type": "canonical",
+      "notes": "show me signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Where is the _DISPATCH_SIGNALS constant defined?",
+      "type": "canonical",
+      "notes": "where is signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Find the section where tie-breaking is implemented.",
+      "type": "canonical",
+      "notes": "find the signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "What does the _normalize_canonical function do?",
+      "type": "canonical",
+      "notes": "what does signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Look at the conftest.py — what fixtures does it define?",
+      "type": "canonical",
+      "notes": "look at signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Which file contains the context boost logic?",
+      "type": "canonical",
+      "notes": "which file signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Show me the code for the semantic fallback path.",
+      "type": "canonical",
+      "notes": "show the code signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Where is the _TIE_PRIORITY list defined in the codebase?",
+      "type": "canonical",
+      "notes": "where is signal + symbol name"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Find the gate that handles PreToolUse events.",
+      "type": "canonical",
+      "notes": "find the signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "What does the test_threshold_sweep test verify?",
+      "type": "canonical",
+      "notes": "what does signal + test reference"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "show me were the scoring hapens",
+      "type": "informal_typos",
+      "notes": "show me + where/happens typos"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "wher is the config file?",
+      "type": "informal_typos",
+      "notes": "where is + typo"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "find the dispatch siganl list",
+      "type": "informal_typos",
+      "notes": "find the + typo"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "wat does classify_intent do exactly",
+      "type": "informal_typos",
+      "notes": "what does + typo"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "look at the gate file, wats in it",
+      "type": "informal_typos",
+      "notes": "look at + typo"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "show: _DISPATCH_SIGNALS",
+      "type": "mid_task_shorthand",
+      "notes": "show shorthand"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "find: context_boost function",
+      "type": "mid_task_shorthand",
+      "notes": "find shorthand"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "where: tie priority",
+      "type": "mid_task_shorthand",
+      "notes": "where shorthand"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "what does: _score_keywords",
+      "type": "mid_task_shorthand",
+      "notes": "what does shorthand"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "look at: conftest.py",
+      "type": "mid_task_shorthand",
+      "notes": "look at shorthand"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "I need to find where the exclusion logic lives before making changes.",
+      "type": "implicit_context",
+      "notes": "find the + implicit pre-change context"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Before I edit it, show me the current implementation.",
+      "type": "implicit_context",
+      "notes": "show me + implicit pre-edit context"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "I'm debugging a misclassification — show me the scoring logic.",
+      "type": "implicit_context",
+      "notes": "show me + implicit debug context"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "To understand the bug, I need to see what the function returns.",
+      "type": "implicit_context",
+      "notes": "show me (implicit) + debug context"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Check the config — which classes have per-class thresholds?",
+      "type": "implicit_context",
+      "notes": "which file variant + implicit check"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Show me the code, also fix the bug on line 42.",
+      "type": "boundary",
+      "notes": "show me + trailing agentic boundary"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Find the function, then we'll dispatch a worker to modify it.",
+      "type": "boundary",
+      "notes": "find the + trailing dispatch boundary"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "What does this file do — is it part of the overall architecture?",
+      "type": "boundary",
+      "notes": "what does + architecture boundary"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Look at the test file and tell me if anything needs fixing.",
+      "type": "boundary",
+      "notes": "look at + implicit agentic boundary"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Where is the threshold defined? Also explain why that value was chosen.",
+      "type": "boundary",
+      "notes": "where is + trailing explanation boundary"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Show me the _NARRATION_BIGRAMS constant.",
+      "type": "canonical",
+      "notes": "show me + constant"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Where does the semantic scorer get loaded?",
+      "type": "canonical",
+      "notes": "where is variant"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Find the test that covers dispatch/narration separation.",
+      "type": "canonical",
+      "notes": "find the + test reference"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "What does the _extract_primary_clause function return?",
+      "type": "canonical",
+      "notes": "what does + function reference"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Show me the full list of agentic verbs.",
+      "type": "canonical",
+      "notes": "show me + list"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Which file defines the runner for the eval suite?",
+      "type": "canonical",
+      "notes": "which file signal"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Look at the gate script and identify the blocking conditions.",
+      "type": "canonical",
+      "notes": "look at + identify"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Find where _AGENTIC_EXCLUSION_CONTEXT is applied.",
+      "type": "canonical",
+      "notes": "find the + application site"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "show me the sematic scroer class",
+      "type": "informal_typos",
+      "notes": "show me + semantic/scorer typos"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "wher is the bigram list defined",
+      "type": "informal_typos",
+      "notes": "where is + typo"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "show: SemanticScorer.resolve_with_fallback",
+      "type": "mid_task_shorthand",
+      "notes": "show shorthand with method path"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "find: inline_narration suppress logic",
+      "type": "mid_task_shorthand",
+      "notes": "find shorthand"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Code review needs the function signatures — show me classify_intent.py exports.",
+      "type": "implicit_context",
+      "notes": "show me + implicit code review context"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Show me the code for this. Don't modify anything yet.",
+      "type": "boundary",
+      "notes": "show me + negation of agentic"
+    },
+    {
+      "intent": "qa_with_reads",
+      "prompt": "Find the gate rule, also explain the whole gate architecture.",
+      "type": "boundary",
+      "notes": "find the + architecture boundary"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What is the default semantic upgrade threshold?",
+      "type": "canonical",
+      "notes": "what is signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What are the seven intent classes?",
+      "type": "canonical",
+      "notes": "what are signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "How many signals are in the dispatch bigrams list?",
+      "type": "canonical",
+      "notes": "how many signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What does FO stand for in the routing context?",
+      "type": "canonical",
+      "notes": "what does + simple factual"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Is the semantic scorer enabled by default?",
+      "type": "canonical",
+      "notes": "is it true variant"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What version of the corpus is this?",
+      "type": "canonical",
+      "notes": "what version signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "When did the T019 normalization feature ship?",
+      "type": "canonical",
+      "notes": "when did signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Who wrote the classify_intent module?",
+      "type": "canonical",
+      "notes": "who is signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Are there unit tests for the classifier?",
+      "type": "canonical",
+      "notes": "are there signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What type of scoring does the semantic scorer use?",
+      "type": "canonical",
+      "notes": "what type signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "wats the default threshhold",
+      "type": "informal_typos",
+      "notes": "what is + typos"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "how many intent clasess are ther",
+      "type": "informal_typos",
+      "notes": "how many + typos"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "wat does RB mean",
+      "type": "informal_typos",
+      "notes": "what does + typo"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "is semantic scring on by defalt",
+      "type": "informal_typos",
+      "notes": "is it + typos"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "who made the gate scripts",
+      "type": "informal_typos",
+      "notes": "who is + informal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "default threshold?",
+      "type": "mid_task_shorthand",
+      "notes": "minimal factual query"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "# intent classes?",
+      "type": "mid_task_shorthand",
+      "notes": "shorthand count query"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "what's FO",
+      "type": "mid_task_shorthand",
+      "notes": "minimal what is"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "semantic upgrade threshold value?",
+      "type": "mid_task_shorthand",
+      "notes": "minimal value query"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "unit tests exist?",
+      "type": "mid_task_shorthand",
+      "notes": "minimal yes/no"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "I haven't used this project before — what does it actually do?",
+      "type": "implicit_context",
+      "notes": "implicit new user + what does"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Quick question: what's the max value for resume_ttl_seconds?",
+      "type": "implicit_context",
+      "notes": "what is + quick question filler"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "I keep seeing 'qa_simple' in the logs — what does that mean?",
+      "type": "implicit_context",
+      "notes": "what does it mean signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Not sure if this is correct — is the tie priority list configurable?",
+      "type": "implicit_context",
+      "notes": "is it + implicit uncertainty"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Before I change anything: what kind of scoring does the keyword classifier use?",
+      "type": "implicit_context",
+      "notes": "what kind signal + pre-change context"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What is the upgrade threshold, also show me where it's defined.",
+      "type": "boundary",
+      "notes": "what is + trailing read boundary"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "How many classes are there? And can you add a new one?",
+      "type": "boundary",
+      "notes": "how many + trailing agentic boundary"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What does classify_intent return? Walk me through the whole function.",
+      "type": "boundary",
+      "notes": "what does + trailing architecture boundary"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Is there a test for this? If not, create one.",
+      "type": "boundary",
+      "notes": "are there + conditional agentic boundary"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What version is this? Please update the version string too.",
+      "type": "boundary",
+      "notes": "what version + trailing agentic boundary"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Explain what 'source: fallback' means in the classifier output.",
+      "type": "canonical",
+      "notes": "explain what signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Tell me what the inline_narration class is for.",
+      "type": "canonical",
+      "notes": "tell me what signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What is the concurrency cap for subagents?",
+      "type": "canonical",
+      "notes": "what is signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Are there any classes that skip the semantic scorer entirely?",
+      "type": "canonical",
+      "notes": "are there signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What does the 'source' field mean in classify_intent_detailed output?",
+      "type": "canonical",
+      "notes": "what does it mean signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "How many bigram signals are defined for dispatch?",
+      "type": "canonical",
+      "notes": "how many signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What is the tie-breaking rule when two classes score equally?",
+      "type": "canonical",
+      "notes": "what is signal"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "Is the keyword classifier the primary or secondary classifier?",
+      "type": "canonical",
+      "notes": "is it variant"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "wat is the upgrade threshhold value",
+      "type": "informal_typos",
+      "notes": "what is + typos"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "are ther tests 4 all 7 classes",
+      "type": "informal_typos",
+      "notes": "are there + typos + number"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "tie-breaking rule?",
+      "type": "mid_task_shorthand",
+      "notes": "minimal factual shorthand"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "what's 'source: fallback' mean",
+      "type": "mid_task_shorthand",
+      "notes": "what does it mean shorthand"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "We hit an unexpected qa_simple classification — what causes that fallback?",
+      "type": "implicit_context",
+      "notes": "what does + implicit debug context"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "What is the semantic threshold? Also fix it if it's wrong.",
+      "type": "boundary",
+      "notes": "what is + trailing agentic boundary"
+    },
+    {
+      "intent": "qa_simple",
+      "prompt": "How many signals are there, and show me the full list.",
+      "type": "boundary",
+      "notes": "how many + trailing read boundary"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "Evaluate whether the cost impact of semantic scoring justifies its accuracy gain",
+      "type": "canonical",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "Should we adopt a go no go checklist before every release? Assess the tradeoff",
+      "type": "canonical",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "Compare the efficiency of the haiku and sonnet tiers for classification work",
+      "type": "canonical",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "Assess the operational cost of keeping three eval suites alive",
+      "type": "canonical",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "evaluate tradeoff gate caching vs recompute lol",
+      "type": "informal_typos",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "shuld we drop the semantic scorer, whats the cost benfit",
+      "type": "informal_typos",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "how much wud we save by batching, asses it",
+      "type": "informal_typos",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "and the tradeoff there? is it viable or not",
+      "type": "mid_task_shorthand",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "ok so cost impact of that change, worth it?",
+      "type": "mid_task_shorthand",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "fine, justify it then, what's the efficiency story",
+      "type": "mid_task_shorthand",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "given what we just saw, should we keep the current floors or revisit them",
+      "type": "implicit_context",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "so what will happen to spend if we go with that approach",
+      "type": "implicit_context",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "Is it viable to run the whole suite nightly, and what is the tradeoff against per-commit runs?",
+      "type": "boundary",
+      "notes": "T1 held-out analytical_qa"
+    },
+    {
+      "intent": "analytical_qa",
+      "prompt": "Evaluate whether we should refactor the gate module now or defer it",
+      "type": "boundary",
+      "notes": "T1 held-out analytical_qa"
+    }
+  ]
+}

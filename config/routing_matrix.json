@@ -1,0 +1,26 @@
+{
+  "_doc": "Session-model-aware worker routing matrix. Maps (session_model, task_type) to worker model.",
+  "matrix": {
+    "sonnet": {
+      "mechanical": "haiku",
+      "prose": "sonnet",
+      "integration": "sonnet",
+      "explore": "haiku",
+      "test": "haiku",
+      "review": "sonnet"
+    },
+    "haiku": {
+      "mechanical": "haiku",
+      "prose": "haiku",
+      "integration": "haiku",
+      "explore": "haiku",
+      "test": "haiku",
+      "review": "sonnet"
+    }
+  },
+  "rules": {
+    "haiku_only_when": "Task has complete code spec (function signatures, types, tests defined). Never for prose/ambiguous tasks.",
+    "final_review": "Subagent review uses sonnet, never opus. Opus is orchestrator-inline only.",
+    "override": "Controller can override with justification logged as Ruling."
+  }
+}

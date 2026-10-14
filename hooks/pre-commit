@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# pre-commit hook: reject staged files with execute bit that shouldn't have it.
+# Only *.sh files are allowed to be executable. Everything else (py, json, md, etc.)
+# must be 100644. This prevents subagent/tool-created files from leaking +x into git.
+
+set -euo pipefail
+
+# Extensions that are ALLOWED to have execute bit
+EXEC_ALLOWED='\.sh$'
+
+bad_files=()
+
+while IFS= read -r line; do
+  # Each line from --cached --diff-filter=ACMR looks like:
+  # :old_mode new_mode old_hash new_hash status\tpath
+  new_mode=$(echo "$line" | awk '{print $2}')
+  path=$(echo "$line" | awk '{print $NF}')
+  if [[ "$new_mode" == "100755" ]] && ! echo "$path" | grep -qE "$EXEC_ALLOWED"; then
+    bad_files+=("$path")
+  fi
+done < <(git diff-index --cached --diff-filter=ACMR HEAD -- 2>/dev/null || true)
+
+# Also check for initial commit (no HEAD yet)
+if ! git rev-parse --verify HEAD >/dev/null 2>&1; then
+  while IFS=$'\t' read -r mode_and_rest path; do
+    mode="${mode_and_rest%% *}"
+    if [[ "$mode" == "100755" ]] && ! echo "$path" | grep -qE "$EXEC_ALLOWED"; then
+      bad_files+=("$path")
+    fi
+  done < <(git ls-files -s)
+fi
+
+if [[ ${#bad_files[@]} -gt 0 ]]; then
+  echo "ERROR: The following staged files have execute permission (100755) but shouldn't:"
+  printf '  %s\n' "${bad_files[@]}"
+  echo ""
+  echo "Auto-fix and re-stage:"
+  echo "  git update-index --chmod=-x <file>..."
+  echo ""
+  echo "Or fix all at once:"
+  for f in "${bad_files[@]}"; do
+    echo "  git update-index --chmod=-x \"$f\""
+  done
+  exit 1
+fi

@@ -1,0 +1,25 @@
+{
+  "_doc": "Confidence thresholds for semantic intent classifier. When top-class score falls below threshold, apply conservative fallback per fallback_map.",
+  "default_threshold": 0.45,
+  "per_class": {
+    "agentic_action": 0.44,
+    "dispatch_justification": 0.35,
+    "inline_narration": 0.44,
+    "qa_architecture": 0.44,
+    "content_generation": 0.44,
+    "qa_simple": 0.25,
+    "qa_with_reads": 0.44,
+    "analytical_qa": 0.44
+  },
+  "fallback_map": {
+    "_doc": "When top-class confidence is below threshold, fall back to a more conservative (lower-cost) intent.",
+    "agentic_action": "qa_architecture",
+    "qa_architecture": "qa_with_reads",
+    "qa_with_reads": "qa_simple",
+    "qa_simple": "qa_simple",
+    "content_generation": "qa_simple",
+    "dispatch_justification": "agentic_action",
+    "inline_narration": "qa_simple",
+    "analytical_qa": "qa_architecture"
+  }
+}

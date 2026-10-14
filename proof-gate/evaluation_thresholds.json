@@ -1,0 +1,26 @@
+{
+  "rate_threshold": 0.02,
+  "cost_threshold": 0.05,
+  "count_threshold": 1,
+  "metric_directions": {
+    "accuracy": "higher_is_better",
+    "fallback_rate": "lower_is_better",
+    "deny_count": "higher_is_better",
+    "nudge_count": "informational",
+    "cost_estimate_usd": "lower_is_better",
+    "estimated_cost_usd": "lower_is_better",
+    "total_estimated_tokens": "lower_is_better",
+    "total_actual_tokens": "lower_is_better",
+    "calibration_ratio": "closer_to_1",
+    "total_sessions": "informational",
+    "unique_session_ids": "informational",
+    "tier_transitions": "informational",
+    "policy_proposals": "informational",
+    "low_confidence_count": "lower_is_better",
+    "total_turns": "informational",
+    "total_signal_entries": "informational",
+    "convergence_verdict": "informational",
+    "role_distribution": "informational",
+    "deny_by_gate_id": "informational"
+  }
+}

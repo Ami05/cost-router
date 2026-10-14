@@ -1,0 +1,62 @@
+{
+  "entries": [
+    {
+      "id": "intent-mechanical-to-bulkedit-1",
+      "kind": "intent",
+      "if_intent": "mechanical",
+      "when_any": [
+        "every occurrence",
+        "every file",
+        "all call sites",
+        "all occurrences",
+        "rename across",
+        "update all",
+        "replace throughout"
+      ],
+      "prefer": "bulk-edit"
+    },
+    {
+      "id": "intent-mechanical-to-bulkedit-2",
+      "kind": "intent",
+      "if_intent": "mechanical",
+      "when_any": [
+        "all files",
+        "across all files",
+        "across the codebase",
+        "repository-wide"
+      ],
+      "prefer": "bulk-edit"
+    },
+    {
+      "id": "role-fo-to-rb-1",
+      "kind": "role",
+      "when_any": [
+        "flaky",
+        "race condition",
+        "intermittent",
+        "race",
+        "root cause",
+        "root cause analysis",
+        "rca"
+      ],
+      "prefer": "RB",
+      "not": ["FO"]
+    },
+    {
+      "id": "role-fo-to-rb-2",
+      "kind": "role",
+      "when_any": [
+        "postmortem",
+        "post-mortem",
+        "postmortem analysis",
+        "synthesize",
+        "synthesis",
+        "performance analysis",
+        "cpu analysis",
+        "memory analysis"
+      ],
+      "prefer": "RB",
+      "not": ["FO"]
+    }
+  ]
+}

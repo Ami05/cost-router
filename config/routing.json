@@ -1,0 +1,251 @@
+{
+  "routing": {
+    "dispatch_gate_threshold": 14,
+    "flip_flop_threshold": 2,
+    "dispatch_nudge_threshold": 3,
+    "dispatch_deny_threshold": 8,
+    "session_dispatch_deny_threshold": 12,
+    "fast_path_call_limit": 3,
+    "fast_path_max_prompt_chars": 250,
+    "max_tracked_sessions": 200,
+    "subagent_ttl_seconds": 300,
+    "active_subagent_stale_ttl_seconds": 1800,
+    "transcript_tail_bytes": 1000000,
+    "large_write_line_threshold": 150,
+    "large_write_byte_threshold": 5120,
+    "tier_history_cap": 20,
+    "assistant_snippet_chars": 500,
+    "task_target_hash_chars": 500,
+    "direct_bulk_write_limit": 3,
+    "fw_scope_file_limit": 5,
+    "explore_required_model": {
+      "claude": "haiku",
+      "cursor": "composer-2.5-fast"
+    },
+    "rd2_promote_threshold": 0.3,
+    "orchestrator_nudge_deny_after": 3
+  },
+  "thresholds": {
+    "read_full_max_lines": 300,
+    "edit_dispatch_min_lines": 500,
+    "write_existing_max_lines": 150,
+    "write_existing_max_kb": 5,
+    "role_read_max_lines": 50
+  },
+  "routing_matrix": {
+    "_doc": "Maps work_complexity intent to model assignments per role and dispatch limits. Used by OC-1 gate, PROD-19 gate. max_round_trips keys are retained for legacy tolerance but are no longer enforced by any gate \u2014 budget enforcement now flows through _dispatch_debt_active() in check_routing.py. test_runner is enforced by scripts/enforce_test_runner_model.py (pre_task gate): a dispatch whose prompt implies running a test suite must declare model=test_runner for the session's intent, or it is denied and told to split into a separate test_runner-tier shell dispatch instead of chaining into a reasoning-tier worker. Opus subagent dispatches are permanently blocked by scripts/enforce_explicit_model.py. effort (low|medium|high|xhigh|max) is set per intent independently of model tier; a sonnet worker on a bounded sub-task may run below high.",
+    "_default": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 8,
+      "warning_pct": 70
+    },
+    "mechanical": {
+      "effort": "low",
+      "orchestrator": "sonnet",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 5
+    },
+    "additive": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 8
+    },
+    "design": {
+      "effort": "xhigh",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 10
+    },
+    "ambiguous": {
+      "effort": "xhigh",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "sonnet",
+      "max_round_trips": 8
+    },
+    "debug": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 8
+    },
+    "bulk-edit": {
+      "effort": "low",
+      "orchestrator": "sonnet",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 4
+    },
+    "qa_simple": {
+      "effort": "low",
+      "orchestrator": "haiku",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 3
+    },
+    "qa_with_reads": {
+      "effort": "low",
+      "orchestrator": "sonnet",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 4
+    },
+    "qa_architecture": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 6
+    },
+    "analytical_qa": {
+      "effort": "medium",
+      "orchestrator": "sonnet",
+      "worker": "haiku",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 4
+    },
+    "content_generation": {
+      "effort": "medium",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 5
+    },
+    "agentic_action": {
+      "effort": "high",
+      "orchestrator": "sonnet",
+      "worker": "sonnet",
+      "explorer": "haiku",
+      "test_runner": "haiku",
+      "max_round_trips": 8
+    }
+  },
+  "concurrency": {
+    "_doc": "Bounded Wave Scheduler \u2014 operational rules in CLAUDE.md \u00a7 BWS. max_inflight_subagents cap enforced in check_routing.py; serialize_verify blocks verification while wave units are active. RC-6: wave_timeout_seconds expires dead subagents to allow partial wave drain; partial_wave_policy controls behavior after expiry.",
+    "max_inflight_subagents": 3,
+    "serialize_verify": true,
+    "wave_timeout_seconds": 180,
+    "partial_wave_policy": "allow",
+    "session_budget_pct": 0.6
+  },
+  "dispatch_context": {
+    "budget_pct": 0.7,
+    "nudge_pct_min": 70.0,
+    "over_budget_pct": 100.0,
+    "prompt_bloat_threshold": 10.0,
+    "subagent_infra_tokens": {
+      "fast": 40000,
+      "reasoning": 70000,
+      "default": 70000
+    },
+    "resume_ttl_seconds": 300,
+    "bands": {
+      "_doc": "DGC-002 dispatch context bands (tokens). min_useful_work_tokens / expected_output_tokens per model tier; target_min < target_max <= hard_limit; safety_reserve_tokens held back from the window. mode: off|warn|enforce, missing/invalid -> warn.",
+      "min_useful_work_tokens": {
+        "fast": 40000,
+        "default": 70000,
+        "reasoning": 70000
+      },
+      "expected_output_tokens": {
+        "fast": 8000,
+        "default": 15000,
+        "reasoning": 25000
+      },
+      "target_min": 140000,
+      "target_max": 165000,
+      "hard_limit": 180000,
+      "safety_reserve_tokens": 10000,
+      "mode": "warn"
+    },
+    "affinity": {
+      "_doc": "DGC-002 warm-worker affinity matching threshold (0..1).",
+      "threshold": 0.3
+    },
+    "enforce_decision": {
+      "_doc": "DGC-002 evidence ceilings before a dispatch_context gate may move from warn to enforce. fp_ceiling_* are false-positive rates and must lie in (0,1); sample_bounds_* bound the upper confidence limit.",
+      "fp_ceiling_hard_deny": 0.01,
+      "fp_ceiling_nudge": 0.05,
+      "fp_ceiling_default": 0.02,
+      "min_runs": 300,
+      "min_runs_per_worker_type": 100,
+      "sample_bounds_upper_pct": 0.95,
+      "sample_bounds_upper_limit": 0.02
+    },
+    "_resume_ttl_constraint": "HARD LIMIT: resume_ttl_seconds must never exceed 300 (5 min). Anthropic subagent prompt cache TTL is 5 min \u2014 resuming after cache expiry pays full cold-write price (1.25x base input on entire prefix), making resume MORE expensive than a fresh spawn. This is a cost protection rule, not a bug. Raising this value silently degrades cost savings."
+  },
+  "progress_ledger": {
+    "_doc": "Bounded Wave Scheduler \u2014 operational rules in CLAUDE.md \u00a7 BWS. max_stall_markers: consecutive tool calls without progress markers before deny; null/absent disables stall detection.",
+    "max_stall_markers": 6,
+    "mode": "warn",
+    "kill": {
+      "_doc": "DGC-002 progress-ledger kill switch: grace_denied_calls denied calls tolerated before a stalled worker is flagged. mode: off|warn|enforce, missing/invalid -> warn.",
+      "grace_denied_calls": 3,
+      "mode": "warn"
+    },
+    "worker_overrides": {
+      "mutation": {
+        "max_stall_seconds": 600
+      },
+      "read": {
+        "max_stall_seconds": 600
+      }
+    },
+    "strict_profile": {
+      "_doc": "DGC-103: strict stall thresholds for shell/orchestrator workers. Inert until gate enforcement is enabled. These values are NOT read by dispatch_enforcer._stall_thresholds_for() until the strict profile gate ships; they are present here as a reference and for validation only.",
+      "shell": {
+        "max_stall_seconds": 90,
+        "max_stall_markers": 3,
+        "heartbeat_seconds": 30
+      },
+      "orchestrator": {
+        "max_stall_seconds": 90,
+        "max_stall_markers": 3,
+        "heartbeat_seconds": 30
+      }
+    }
+  },
+  "token_estimation": {
+    "correction": {
+      "sonnet_5": {
+        "prose": 1.5,
+        "code": 2.0,
+        "symbol": 2.5
+      },
+      "default": {
+        "prose": 1.5,
+        "code": 2.0,
+        "symbol": 2.5
+      }
+    },
+    "context_windows": {
+      "default": 200000,
+      "composer": 200000,
+      "sonnet_45": 200000,
+      "sonnet_46_5": 1000000,
+      "sonnet_5_5": 1000000
+    }
+  },
+  "estimate_dispatch_context": {
+    "code_marker_ratio_threshold": 0.05
+  }
+}

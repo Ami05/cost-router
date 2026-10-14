@@ -1,0 +1,1 @@
+{"hook_event_name":"PreToolUse","session_id":"test-session-456","subagent_id":"subagent-worker-789","tool_name":"Agent","model":"claude-haiku-4-5","tool_input":{"description":"Explore codebase structure"}}

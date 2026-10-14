@@ -1,0 +1,65 @@
+{
+  "session_limits": {
+    "file_hash_guard": 50,
+    "agent_call_tracker": 50,
+    "inject_rule": 100,
+    "session_summary_projects": 100,
+    "agent_call_tracker_ttl_days": 14
+  },
+  "session_cost_budget": {
+    "budget_usd": 5.0,
+    "warning_pcts": [
+      50,
+      80
+    ],
+    "orchestrator_cost_per_turn": {
+      "reasoning": 0.25,
+      "sonnet": 0.05,
+      "fast": 0.01
+    }
+  },
+  "logging": {
+    "max_usage_log_bytes": 5242880,
+    "usage_log_compact_trigger_bytes": 2097152,
+    "max_scenarios_per_key": 50,
+    "max_counterfactual_log_bytes": 2097152
+  },
+  "runtime": {
+    "target_hash_hex_chars": 12,
+    "stdin_select_timeout_seconds": 0.5,
+    "tail_read_chunk_bytes": 8192
+  },
+  "graph": {
+    "ttl_days": 10
+  },
+  "impact": {
+    "session_summary": true,
+    "min_turns": 3,
+    "min_savings_usd": 0.1,
+    "cold_start_sessions": 3,
+    "auto_weekly": true
+  },
+  "analyze_routing": {
+    "gate_health_warn_pct": 10.0,
+    "escalation_window": 4,
+    "over_route_token_threshold": 200,
+    "over_route_session_token_cap": 1000,
+    "undispatched_tool_threshold": 12,
+    "escalation_nudge_threshold": 2,
+    "repeat_read_nudge_threshold": 3,
+    "undispatched_nudge_threshold": 1,
+    "session_cadence_threshold": 15,
+    "nudge_cooldown_hours": 2,
+    "dispatch_budget_nudge_pct": 70.0,
+    "pricing_per_1k": {
+      "_comment": "MVP-1: these two flat output-only prices exist only for the 'estimated savings if re-routed to fast tier' display in analyze_routing.py's over-route report. They intentionally mirror scripts/pricing.json's sonnet/haiku output_per_1k so the two files don't drift silently apart — the real, per-model, input+output cost math for /cost-report lives in scripts/pricing.json via price_for(), not here. If you edit pricing.json's sonnet or haiku output_per_1k, update these two to match.",
+      "reasoning_output": 0.015,
+      "fast_output": 0.004
+    },
+    "repeat_dispatch_token_threshold": 500,
+    "session_over_route_tool_call_cap": 5,
+    "session_over_route_min_cost_usd": 0.005,
+    "qa_full_file_read_threshold": 3,
+    "qa_low_tool_call_threshold": 3
+  }
+}

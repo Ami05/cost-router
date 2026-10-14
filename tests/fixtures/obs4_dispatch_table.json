@@ -1,0 +1,67 @@
+{
+  "_provenance": "Source: knowledge/tickets/unboundedOrchestrator.json obs-4 dispatch_table (7 rows). Rows are measured data (label, tokens, tool_calls, wall_time_s). Models are NOT in the source table; the two scenarios below are documented assumptions, not measurements: all_sonnet (all 7 rows sonnet) and mixed (row 1 and rows 6-7 haiku, rows 2-5 sonnet). No cost numbers are stored in this fixture; costs are computed at test time by the real charge path.",
+  "rows": [
+    {
+      "label": "Explore: locate OC-1 gate + _config_cache sites",
+      "tokens": 41267,
+      "tool_calls": 11,
+      "wall_time_s": 67
+    },
+    {
+      "label": "TICKET-023 mutation (test_proposals_reports.py)",
+      "tokens": 38876,
+      "tool_calls": 6,
+      "wall_time_s": 238
+    },
+    {
+      "label": "TICKET-024 mutation (dispatch_enforcer.py + journey test)",
+      "tokens": 45346,
+      "tool_calls": 13,
+      "wall_time_s": 144
+    },
+    {
+      "label": "TICKET-021 mutation (check_routing.py override path)",
+      "tokens": 40102,
+      "tool_calls": 5,
+      "wall_time_s": 117
+    },
+    {
+      "label": "TICKET-026 mutation (test_wave_partial_failure.py, 10 sites)",
+      "tokens": 33854,
+      "tool_calls": 15,
+      "wall_time_s": 102
+    },
+    {
+      "label": "TICKET-021 verify attempt 1 (-k orchestrator_ceiling, wrong test name)",
+      "tokens": 24473,
+      "tool_calls": 3,
+      "wall_time_s": 28
+    },
+    {
+      "label": "TICKET-021 verify attempt 2 (-k oc1)",
+      "tokens": 24732,
+      "tool_calls": 1,
+      "wall_time_s": 25
+    }
+  ],
+  "scenarios": {
+    "all_sonnet": [
+      "sonnet",
+      "sonnet",
+      "sonnet",
+      "sonnet",
+      "sonnet",
+      "sonnet",
+      "sonnet"
+    ],
+    "mixed": [
+      "haiku",
+      "sonnet",
+      "sonnet",
+      "sonnet",
+      "sonnet",
+      "haiku",
+      "haiku"
+    ]
+  }
+}

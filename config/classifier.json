@@ -1,0 +1,23 @@
+{
+  "classify_intent": {
+    "qa_with_reads_max_files": 2,
+    "qa_with_reads_max_lines": 100,
+    "qa_architecture_max_files": 3
+  },
+  "claude_classifier": false,
+  "model_tiers": {
+    "_doc": "Per-host Task/Agent model IDs grouped by cost tier. haiku and composer-2.5-fast are the same fast tier on Claude Code vs Cursor. Gates resolve tier via tier_of_model(); these slugs appear in denial messages.",
+    "fast": {
+      "claude": "haiku",
+      "cursor": "composer-2.5-fast"
+    },
+    "reasoning": {
+      "claude": "sonnet",
+      "cursor": "claude-4.6-sonnet-medium-thinking"
+    },
+    "opus": {
+      "claude": "opus",
+      "cursor": null
+    }
+  }
+}

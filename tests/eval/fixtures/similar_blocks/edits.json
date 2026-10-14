@@ -1,0 +1,8 @@
+[
+  {
+    "file_path": "handlers.py",
+    "edit_type": "str_replace",
+    "old_content": "def handle_create(data):\n    validated = validate(data)\n    result = db.insert(validated)\n    return {\"status\": \"created\", \"id\": result.id}",
+    "new_content": "def handle_create(data):\n    logger.info(\"Creating resource with data: %s\", data)\n    validated = validate(data)\n    result = db.insert(validated)\n    logger.info(\"Created resource id=%s\", result.id)\n    return {\"status\": \"created\", \"id\": result.id}"
+  }
+]

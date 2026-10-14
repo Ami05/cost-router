@@ -1,0 +1,41 @@
+{
+  "continuation": {
+    "_doc": "DGC-002 continuation manifest limits for chained subagent dispatches. mode: off|warn|enforce, missing/invalid -> warn.",
+    "max_depth": 3,
+    "max_compact_chars": 2000,
+    "max_remaining_items": 10,
+    "no_progress_halts": true,
+    "manifest_required": false,
+    "mode": "warn"
+  },
+  "context_pressure": {
+    "_doc": "RC-7 live main-session context gate. ratio = last main-session assistant usage (input + cache_read + cache_creation) / model context window. mode: off = no-op; warn = never deny, report would_deny and bump would_deny:context_pressure; enforce = deny at ratio >= threshold. Missing/invalid mode -> warn. Unknown model window (default fallback) fails open.",
+    "mode": "warn",
+    "warn_pct": 0.70,
+    "threshold": 0.85
+  },
+  "inline_mutation_gate": {
+    "nudge_threshold": 3,
+    "deny_threshold": 6
+  },
+  "shell_gate": {
+    "nudge_threshold": 3,
+    "deny_threshold": 5
+  },
+  "resume_gate": {
+    "work_unit_threshold": 3,
+    "early_call_threshold": 5,
+    "short_prompt_max_chars": 30,
+    "max_tracked_sessions": 200
+  },
+  "read_repeat": {
+    "max_tracked_sessions": 200,
+    "deny_after_repeat_count": 2
+  },
+  "sequential_explore_gate": {
+    "threshold": 3
+  },
+  "shell_batch_cap": {
+    "total_inline_cap": 4
+  }
+}

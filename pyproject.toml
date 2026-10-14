@@ -1,0 +1,11 @@
+[project]
+name = "cost-router"
+version = "1.0.0"
+description = "Cost-aware model routing"
+
+[tool.pytest.ini_options]
+markers = [
+    "e2e: end-to-end integration tests",
+    "eval: evaluation and benchmark tests",
+]
+addopts = "-n auto --dist loadfile"

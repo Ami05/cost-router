@@ -1,0 +1,205 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Baseline Collector Output Schema",
+  "description": "Schema for baseline metrics snapshot capturing current system state",
+  "type": "object",
+  "required": [
+    "metadata",
+    "session_metrics",
+    "gate_metrics",
+    "gate_event_metrics",
+    "classifier_metrics",
+    "cost_metrics",
+    "routing_metrics"
+  ],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Collection metadata and context",
+      "required": ["collected_at", "data_dir", "script_version"],
+      "properties": {
+        "collected_at": {
+          "type": "string",
+          "description": "ISO 8601 timestamp when baseline was collected"
+        },
+        "data_dir": {
+          "type": "string",
+          "description": "Absolute path to data directory"
+        },
+        "script_version": {
+          "type": "string",
+          "description": "Version of collector script"
+        }
+      }
+    },
+    "session_metrics": {
+      "type": "object",
+      "description": "Session-level aggregate metrics",
+      "required": ["total_sessions", "total_turns", "unique_session_ids"],
+      "properties": {
+        "total_sessions": {
+          "type": "integer",
+          "description": "Total number of sessions"
+        },
+        "total_turns": {
+          "type": "integer",
+          "description": "Total number of turns across all sessions"
+        },
+        "unique_session_ids": {
+          "type": "integer",
+          "description": "Count of unique session identifiers"
+        },
+        "entries_per_session": {
+          "type": "number",
+          "description": "Proxy: signal entries divided by unique sessions"
+        }
+      }
+    },
+    "gate_metrics": {
+      "type": "object",
+      "description": "Gate firing and denial metrics",
+      "required": ["total_signal_entries", "deny_count", "nudge_count", "deny_by_gate_id"],
+      "properties": {
+        "total_signal_entries": {
+          "type": "integer",
+          "description": "Total entries in signal.jsonl"
+        },
+        "deny_count": {
+          "type": "integer",
+          "description": "Number of deny events (event='deny' only; session_id string match removed)"
+        },
+        "nudge_count": {
+          "type": "integer",
+          "description": "Number of nudge events (event='nudge' only; session_id string match removed)"
+        },
+        "deny_by_gate_id": {
+          "type": "object",
+          "description": "Deny count breakdown by gate/rule ID",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "gate_event_metrics": {
+      "type": "object",
+      "description": "Detailed gate event aggregation metrics",
+      "required": ["total_events", "deny_events", "allow_events", "nudge_events", "unique_sessions", "deny_by_gate", "deny_by_tool", "events_by_chain"],
+      "properties": {
+        "total_events": {
+          "type": "integer",
+          "description": "Total number of gate events processed"
+        },
+        "deny_events": {
+          "type": "integer",
+          "description": "Number of events with action='deny'"
+        },
+        "allow_events": {
+          "type": "integer",
+          "description": "Number of events with action='allow'"
+        },
+        "nudge_events": {
+          "type": "integer",
+          "description": "Number of events with action='nudge'"
+        },
+        "unique_sessions": {
+          "type": "integer",
+          "description": "Number of unique session IDs in gate events"
+        },
+        "deny_by_gate": {
+          "type": "object",
+          "description": "Deny count breakdown by gate name",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "deny_by_tool": {
+          "type": "object",
+          "description": "Deny count breakdown by tool name",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "events_by_chain": {
+          "type": "object",
+          "description": "Event count breakdown by chain name",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "classifier_metrics": {
+      "type": "object",
+      "description": "Semantic classifier and convergence metrics",
+      "required": ["accuracy", "fallback_rate", "low_confidence_count", "convergence_verdict"],
+      "properties": {
+        "accuracy": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Current classifier accuracy from convergence_state.json"
+        },
+        "fallback_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Proportion of entries with was_fallback=true"
+        },
+        "low_confidence_count": {
+          "type": "integer",
+          "description": "Total entries in semantic_low_confidence.jsonl"
+        },
+        "convergence_verdict": {
+          "type": "string",
+          "description": "Convergence status verdict from convergence_state.json"
+        }
+      }
+    },
+    "cost_metrics": {
+      "type": "object",
+      "description": "Token and cost estimate metrics",
+      "required": ["total_estimated_tokens", "total_actual_tokens", "calibration_ratio", "estimated_cost_usd"],
+      "properties": {
+        "total_estimated_tokens": {
+          "type": "integer",
+          "description": "Sum of estimated tokens from usage.jsonl and calibration.jsonl"
+        },
+        "total_actual_tokens": {
+          "type": "integer",
+          "description": "Sum of actual tokens from calibration.jsonl"
+        },
+        "calibration_ratio": {
+          "type": "number",
+          "description": "Ratio of actual to estimated tokens"
+        },
+        "estimated_cost_usd": {
+          "type": "number",
+          "description": "Estimated total cost in USD using pricing.json rates"
+        }
+      }
+    },
+    "routing_metrics": {
+      "type": "object",
+      "description": "Routing role and policy transition metrics",
+      "required": ["role_distribution", "tier_transitions", "policy_proposals"],
+      "properties": {
+        "role_distribution": {
+          "type": "object",
+          "description": "Count of entries per routing_role from reward_log.jsonl",
+          "additionalProperties": {
+            "type": "integer"
+          }
+        },
+        "tier_transitions": {
+          "type": "integer",
+          "description": "Count of policy_changelog.jsonl entries documenting tier/role transitions"
+        },
+        "policy_proposals": {
+          "type": "integer",
+          "description": "Count of proposed policy events in policy_changelog.jsonl"
+        }
+      }
+    }
+  }
+}

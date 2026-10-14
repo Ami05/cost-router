@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio Website</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; }
+    nav  { background: #222; color: #fff; padding: 1rem 2rem; }
+    nav a { color: #fff; margin-right: 1.5rem; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav id="main-nav">
+    <a href="#hero">Home</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <h1>Hello, I'm Alex</h1>
+    <p>I build clean, fast websites.</p>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <h2>About Me</h2>
+    <p>Full-stack developer with 5 years of experience.</p>
+  </section>
+
+  <script>
+    function initNav() {
+      const links = document.querySelectorAll('nav a');
+      links.forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          document.querySelector(link.getAttribute('href'))
+            .scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    }
+    document.addEventListener('DOMContentLoaded', initNav);
+  </script>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <h2>Get in Touch</h2>
+    <p>Email: alex@example.com</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="site-footer">
+    <p>&copy; 2026 Alex. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
